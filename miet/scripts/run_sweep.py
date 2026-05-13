@@ -1,38 +1,29 @@
-"""
-CLI driver for full (L, p) grid sweep.
-Saves results to data/sweep_results.npz.
-"""
-import argparse
-import numpy as np
-import sys
-import os
+#!/usr/bin/env python3
+import sys, time, numpy as np
+sys.path.insert(0, '.')
+from src.simulation import parameter_sweep, load_results
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from src.simulation import run_sweep
-
-L_VALUES = [8, 12, 16, 24, 32]
-P_VALUES = np.linspace(0.0, 0.5, 26)
-N_LAYERS = 6
+L_VALUES  = [8, 12, 16, 20, 24]
+P_VALUES  = np.linspace(0.0, 0.50, 26)
 N_SAMPLES = 200
+N_WORKERS = 1
+SAVE_PATH = "data/sweep_results.npz"
 
+print("="*60)
+print("MIET Production Sweep")
+print(f"  L values:  {L_VALUES}")
+print(f"  p range:   {len(P_VALUES)} points in [0.00, 0.50]")
+print(f"  Samples:   {N_SAMPLES} per (L, p)")
+print(f"  Total:     {len(L_VALUES)*len(P_VALUES)*N_SAMPLES:,} circuit runs")
+print("="*60)
 
-def main():
-    parser = argparse.ArgumentParser(description="MIET full (L, p) sweep")
-    parser.add_argument("--n_samples", type=int, default=N_SAMPLES)
-    parser.add_argument("--n_layers", type=int, default=N_LAYERS)
-    parser.add_argument("--seed", type=int, default=0)
-    parser.add_argument("--out", type=str, default="../data/sweep_results.npz")
-    args = parser.parse_args()
+t0      = time.time()
+results = parameter_sweep(L_VALUES, P_VALUES, N_SAMPLES,
+                          save_path=SAVE_PATH, verbose=True)
+elapsed = time.time() - t0
+print(f"\nCompleted in {elapsed/60:.1f} minutes. Saved to {SAVE_PATH}")
 
-    out_path = os.path.join(os.path.dirname(__file__), args.out)
-    os.makedirs(os.path.dirname(out_path), exist_ok=True)
-
-    S_avg, S_std = run_sweep(
-        L_VALUES, P_VALUES, args.n_layers, args.n_samples, seed=args.seed
-    )
-    np.savez(out_path, L=L_VALUES, p=P_VALUES, S_avg=S_avg, S_std=S_std)
-    print(f"Saved to {out_path}")
-
-
-if __name__ == "__main__":
-    main()
+L_vals, p_vals, mean_S, _, _ = load_results(SAVE_PATH)
+dS      = np.abs(np.diff(mean_S[-1]))
+p_c_est = float(p_vals[np.argmax(dS)])
+print(f"Estimated p_c (max |dS/dp| for L={L_VALUES[-1]}): {p_c_est:.3f}")
