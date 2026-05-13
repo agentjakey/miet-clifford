@@ -19,7 +19,6 @@
 \affiliation{Department of Physics,
              University of California San Diego}
 \date{\today}
-\maketitle
 
 %% ────────────────────────────────────────────────────────────
 \begin{abstract}
@@ -44,6 +43,8 @@ system sizes.
 We discuss connections to quantum error correction thresholds and structural
 analogies with threshold phenomena in machine-learning systems.
 \end{abstract}
+
+\maketitle
 
 %% ────────────────────────────────────────────────────────────
 \section{Introduction}
@@ -557,11 +558,13 @@ The phase contribution is~\cite{Aaronson2004}:
 \end{equation}
 and the new phase bit of row $h$ after adding row $i$ is:
 \begin{equation}
-  r_h \leftarrow \left\lfloor\frac{1}{2}
-  \left(2r_h + 2r_i + \sum_{j=0}^{n-1} g(x_{i,j},z_{i,j},x_{h,j},z_{h,j})
-  \right) \bmod 4 \right\rfloor.
+  r_h \leftarrow \Bigl\lfloor\tfrac{1}{2}
+  \Bigl(2r_h + 2r_i + \textstyle\sum_{j} g_{ij}
+  \Bigr) \bmod 4 \Bigr\rfloor,
   \label{eq:rowsum_phase}
 \end{equation}
+where $g_{ij} \equiv g(x_{i,j},z_{i,j},x_{h,j},z_{h,j})$ and the sum runs over
+$j = 0,\ldots,n-1$.
 The sum runs over all $n$ qubits and must be computed in ordinary (mod-4) integer
 arithmetic---not mod-2.
 
