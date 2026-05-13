@@ -1,0 +1,21 @@
+MIPT Critical Quantities
+======================================================================
+
++------------------------------------------+-------------------+---------------------------+
+| Quantity                                 | This work         | Literature                |
++------------------------------------------+-------------------+---------------------------+
+| p_c (crossing of S curves, Fig 1)        | 0.252 +/- 0.042   | ~0.16  (Li+ 2019)         |
+| p_c (FSS collapse, Fig 3)                | 0.280 +/- 0.005   | ~0.16  (Li+ 2019)         |
+| nu   (correlation exponent, Fig 3)       | 2.500 +/- 0.157   | ~1.3   (Zabalo+ 2020)     |
+| alpha (log-scaling at p=0.160, Fig 2)    | 0.370 +/- 0.194   | ~1.6   (Li+ 2019)         |
+| alpha_vol (volume-law coeff, p=0)        | 0.982 +/- 0.032   | ~1     (system dependent) |
+| S_inf (area-law saturation, L=12, p=0.5) | 0.110 +/- 0.022   | O(1)   (area law)         |
++------------------------------------------+-------------------+---------------------------+
+
+NOTE: alpha is the coefficient in S(L/2) = alpha * ln(L/2) + const at p_c.
+Li et al. (2019) PRB 100, 134306 report alpha(p_c) ~ 1.6 for random Clifford circuits.
+Do NOT convert to c_eff = 6*alpha: the MIPT is not a standard CFT.
+(Jian, You, Vasseur, Ludwig, PRB 101, 104302, 2020)
+
+CAVEAT: only 2 system size(s) available. FSS and log-scaling fits are under-constrained.
+Run scripts/run_sweep.py to completion for reliable exponents.
