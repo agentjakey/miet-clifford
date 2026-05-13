@@ -29,6 +29,11 @@ class StabilizerState:
             self.tab[i,   i]   = 1   # destabilizer X_i
             self.tab[n+i, n+i] = 1   # stabilizer   Z_i
 
+    @property
+    def tableau(self):
+        """Alias for self.tab — exposes the canonical attribute name from A&G."""
+        return self.tab
+
     def copy(self):
         s = StabilizerState(self.n)
         s.tab = self.tab.copy()

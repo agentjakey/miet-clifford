@@ -66,3 +66,7 @@ def entanglement_entropy(state: StabilizerState, subsystem_A: list) -> float:
 def half_chain_entropy(state: StabilizerState) -> float:
     """Entanglement entropy of left half [0, n//2) vs right half [n//2, n)."""
     return entanglement_entropy(state, list(range(state.n // 2)))
+
+
+# Public alias — tests and external code import `gf2_rank` without underscore.
+gf2_rank = _gf2_rank
