@@ -1,0 +1,75 @@
+\documentclass[11pt,twocolumn]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{natbib}
+
+\title{Measurement-Induced Entanglement Transitions in Random Clifford Circuits}
+\author{Jacob Ortiz}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We study the entanglement phase transition in $(1+1)$-dimensional random Clifford circuits
+subject to projective measurements at rate $p$. Using the stabilizer tableau formalism,
+we simulate systems of size $L \in \{8,12,16,24,32\}$ and identify a critical point
+$p_c \approx 0.16$ separating a volume-law phase ($p < p_c$) from an area-law phase
+($p > p_c$). At criticality we extract the central charge $c$ from the logarithmic
+scaling of entanglement entropy with subsystem size, and determine the correlation-length
+exponent $\nu$ via finite-size scaling collapse.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+% Motivate MIET: competition between scrambling and projection, connection to
+% quantum error correction, experimental signatures.
+
+\section{Model and Methods}
+\label{sec:methods}
+% Hybrid random Clifford circuit definition. Stabilizer tableau (CHP) formalism.
+% Disorder averaging procedure.
+
+\section{Results}
+\label{sec:results}
+
+\subsection{Phase Diagram}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/phase_diagram.pdf}
+  \caption{Half-chain entanglement entropy $S(L/2)$ vs measurement rate $p$
+           for several system sizes. The crossing near $p_c \approx 0.16$
+           signals the volume-law to area-law transition.}
+  \label{fig:phase}
+\end{figure}
+
+\subsection{Logarithmic Scaling at Criticality}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/log_scaling.pdf}
+  \caption{$S(A)$ vs $\ln|A|$ at $p = p_c$ for $L = 32$. The slope yields
+           the central charge via $S = (c/3)\ln|A| + \mathrm{const}$.}
+  \label{fig:log}
+\end{figure}
+
+\subsection{Finite-Size Scaling Collapse}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/finite_size.pdf}
+  \caption{Scaling collapse $S/S_{\max}$ vs $(p-p_c)L^{1/\nu}$.}
+  \label{fig:fss}
+\end{figure}
+
+\section{Discussion}
+\label{sec:discussion}
+% Compare $p_c$, $c$, $\nu$ to literature values (Li et al., Skinner et al.).
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+
+\end{document}
