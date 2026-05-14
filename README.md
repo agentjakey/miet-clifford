@@ -88,9 +88,15 @@ All commands run from the `miet/` directory.
 
 ### 1. Install dependencies
 
+From the repo root:
+
 ```bash
-pip install -r requirements.txt
+pip install -e ".[dev]"
 ```
+
+This installs the `src` package in editable mode along with all runtime
+dependencies and `pytest`. The legacy `miet/requirements.txt` is kept for
+reference but is superseded by `pyproject.toml`.
 
 ### 2. Run the test suite
 

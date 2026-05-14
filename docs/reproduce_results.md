@@ -17,11 +17,15 @@ cd miet-clifford/miet
 
 ## 2. Dependency installation
 
+From the repo root:
+
 ```bash
-pip install -r requirements.txt
+pip install -e ".[dev]"
 ```
 
-Dependencies: `numpy`, `scipy`, `matplotlib`, `tqdm`, `pytest`.
+This installs the `src` package in editable mode plus all runtime dependencies
+(`numpy`, `scipy`, `matplotlib`, `tqdm`) and `pytest`. The `pyproject.toml`
+at the repo root is the authoritative dependency specification.
 
 ---
 

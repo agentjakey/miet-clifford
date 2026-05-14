@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "miet-clifford"
+version = "0.1.0"
+description = "Measurement-induced entanglement transition simulator using Aaronson-Gottesman stabilizer tableaux"
+requires-python = ">=3.9"
+dependencies = [
+    "numpy",
+    "scipy",
+    "matplotlib",
+    "tqdm",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["miet"]
+
+[tool.pytest.ini_options]
+testpaths = ["miet/tests"]
