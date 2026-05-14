@@ -54,6 +54,7 @@ def random_two_qubit_clifford(state: StabilizerState, q0: int, q1: int, rng=None
     Expected to produce scrambling Clifford dynamics; not verified as a uniform
     sampler over the full 11520-element 2-qubit Clifford group.
     """
+    # TODO: Implement or verify exact uniform two-qubit Clifford sampling.
     random_single_qubit_clifford(state, q0, rng)
     random_single_qubit_clifford(state, q1, rng)
     state.apply_cnot(q0, q1)

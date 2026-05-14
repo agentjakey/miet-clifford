@@ -80,6 +80,7 @@ fixed $L$.
   is expected to produce scrambling Clifford dynamics in the MIPT universality
   class and matches the construction used in the literature. It is not verified
   to be a uniform sampler over the full 11,520-element two-qubit Clifford group.
+  **Future work:** Implement or verify exact uniform two-qubit Clifford sampling.
 
 ## Reproducing results
 
