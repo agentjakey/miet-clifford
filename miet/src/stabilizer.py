@@ -104,8 +104,14 @@ class StabilizerState:
         self.tab[h, :n]    ^= x_i
         self.tab[h, n:2*n] ^= z_i
 
-    def measure(self, a) -> int:
-        """Measure qubit a in the Z basis. Returns 0 or 1. A&G Algorithm 2."""
+    def measure(self, a, rng=None) -> int:
+        """Measure qubit a in the Z basis. Returns 0 or 1. A&G Algorithm 2.
+
+        Args:
+            a:   qubit index
+            rng: numpy.random.Generator for reproducible runs; uses global
+                 numpy RNG when None (backward-compatible default).
+        """
         n = self.n
 
         p = None
@@ -122,7 +128,7 @@ class StabilizerState:
             self.tab[p - n, :] = self.tab[p, :].copy()
             self.tab[p, :]     = 0
             self.tab[p, n + a] = 1
-            outcome            = int(np.random.randint(0, 2))
+            outcome = int(rng.integers(2) if rng is not None else np.random.randint(0, 2))
             self.tab[p, 2*n]   = np.int8(outcome)
             return outcome
 
