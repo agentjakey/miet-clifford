@@ -250,10 +250,11 @@ implemented from scratch without Stim or Qiskit.
   \includegraphics[width=\columnwidth]{fig0_circuit_schematic}
   \caption{Hybrid random Clifford circuit. Brickwork layers of random two-qubit
   Clifford gates (blue boxes labeled C) alternate with single-site measurements
-  (red M symbols) applied independently at rate $p$. Even layers pair qubits
-  $(0,1),(2,3),(4,5)$; odd layers pair $(1,2),(3,4)$. The competition between
-  unitary scrambling and projective measurement drives the entanglement phase
-  transition at $p = p_c$.}
+  (red M symbols); each qubit is measured independently with probability $p$
+  per layer, so the measurement locations shown are illustrative.
+  Even layers pair qubits $(0,1),(2,3),(4,5)$; odd layers pair $(1,2),(3,4)$.
+  The competition between unitary scrambling and projective measurement drives
+  the entanglement crossover at $p \approx p_c$.}
   \label{fig:schematic}
 \end{figure}
 
@@ -262,24 +263,29 @@ implemented from scratch without Stim or Qiskit.
   \caption{Half-chain entanglement entropy $S(L/2)$ vs.\ measurement rate $p$
   for $L \in \{8, 12, 16, 20, 24\}$ (200 disorder realizations each; shaded bands:
   $\pm 1$ standard error of the mean).
-  Adjacent-$L$ curve crossings average to $p_c^{\mathrm{eff}} \approx 0.20$
-  (finite-size effective estimate; statistical uncertainty $\pm 0.017$),
-  signaling the qualitative onset of the phase transition.
-  For $p < p_c^{\mathrm{eff}}$, $S$ increases with $L$ (volume-law);
-  for $p > p_c^{\mathrm{eff}}$, $S$ is approximately $L$-independent (area-law).
-  The vertical dashed line marks the thermodynamic value $p_c \approx 0.16$~\protect\cite{Li2019}.}
+  The curves show finite-size signatures of the volume-law regime ($S$ growing
+  with $L$ at low $p$) and the area-law regime ($S$ approximately $L$-independent
+  at high $p$); the thermodynamic transition is not fully resolved at these system
+  sizes.
+  Adjacent-$L$ curve crossings yield a finite-size effective critical rate
+  $p_c^{\mathrm{eff}} \approx 0.20$ (statistical uncertainty $\pm 0.017$),
+  which lies above the thermodynamic value $p_c \approx
+  0.16$~\protect\cite{Li2019} due to expected finite-size corrections.}
   \label{fig:phase}
 \end{figure}
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{fig2_log_scaling}
   \caption{(Left) Phase diagram with critical region $p \in [0.13, 0.19]$ shaded.
-  (Right) $S(L/2)$ vs.\ $\ln(L/2)$ at $p = 0.16$.
-  The linear fit (dashed red) gives slope
-  $\alpha_{\mathrm{eff}} = 0.27 \pm 0.07$. This is not quantitatively consistent
-  with the asymptotic value $\alpha \approx 1.6$~\protect\cite{Li2019}; the
-  suppression reflects off-critical evaluation and finite-size effects at
-  $L \leq 24$ (see text).
+  (Right) $S(L/2)$ vs.\ $\ln(L/2)$ at $p = 0.16$ (grid point closest to the
+  literature $p_c$).
+  The linear fit (dashed red) yields the small-system fit coefficient
+  $\alpha_{\mathrm{eff}} = 0.27 \pm 0.07$, which is not quantitatively consistent
+  with the asymptotic value $\alpha \approx 1.6$~\protect\cite{Li2019} (established
+  at $L \gg 100$); the suppression reflects off-critical evaluation and
+  finite-size effects at $L \leq 24$ (see text).
+  The figure provides evidence of qualitative critical-like logarithmic growth;
+  it does not resolve the asymptotic exponent.
   The coefficient $\alpha$ is not a CFT central charge
   (see Sec.~\protect\ref{sec:cft}).}
   \label{fig:logscale}
@@ -287,15 +293,18 @@ implemented from scratch without Stim or Qiskit.
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{fig3_scaling_collapse}
-  \caption{Qualitative finite-size scaling collapse under the simplified ansatz
-  of Eq.~(\ref{eq:fss}) (without the critical logarithm; see text).
+  \caption{Diagnostic finite-size scaling collapse under the simplified ansatz of
+  Eq.~(\ref{eq:fss}) (without the critical logarithm; see text).
   (Left) Raw $S(L/2)$ vs.\ $p$ for all five system sizes.
   (Right) Collapsed curves with finite-size effective parameters
   $p_c^{\mathrm{eff}} = 0.209 \pm 0.008$, $\nu_{\mathrm{eff}} = 1.72 \pm 0.10$
   (bootstrap statistical uncertainty, 100 resamples).
-  Thermodynamic values: $p_c \approx 0.16$, $\nu \approx 1.28$~\protect\cite{Zabalo2020}.
-  The systematic deviation from literature values is expected at $L \leq 24$;
-  the quoted $\pm$ values are statistical only.}
+  Because the raw entropy contains additive logarithmic corrections at $p_c$
+  [Eq.~(\ref{eq:logscale})], the fitted $p_c^{\mathrm{eff}}$ and
+  $\nu_{\mathrm{eff}}$ should not be interpreted as precision thermodynamic
+  estimates; the collapse is qualitative.
+  Thermodynamic values: $p_c \approx 0.16$, $\nu \approx
+  1.28$~\protect\cite{Zabalo2020}. Quoted $\pm$ values are statistical only.}
   \label{fig:collapse}
 \end{figure}
 
