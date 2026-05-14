@@ -1,6 +1,31 @@
 # Reproducing Results
 
-All commands assume the `miet/` directory as the working directory unless noted.
+All commands run from the **repo root** (`miet-clifford/`) unless noted.
+
+---
+
+## 0. Quickest route: Makefile
+
+A `Makefile` at the repo root encodes the correct workflow order:
+
+```bash
+make install    # pip install -e ".[dev]"
+make test       # pytest (53 tests)
+make audit      # 7 physics correctness checks
+make quick      # quick simulation sweep, L in {8,12}
+make figures    # regenerate all figures from existing data
+make report     # compile LaTeX report (requires pdflatex)
+```
+
+Run `make help` for the full target list. The sections below document the same
+steps manually for reference.
+
+On Windows with MiKTeX, set the LaTeX path for the `report` target:
+
+```bash
+make report PDFLATEX="C:/Users/.../MiKTeX/miktex/bin/x64/pdflatex.exe" \
+            BIBTEX="C:/Users/.../MiKTeX/miktex/bin/x64/bibtex.exe"
+```
 
 ---
 
@@ -8,10 +33,6 @@ All commands assume the `miet/` directory as the working directory unless noted.
 
 Python 3.9 or later. No compiled extensions required; the stabilizer tableau
 is pure Python/NumPy. The simulation has been tested on Linux and Windows.
-
-```bash
-cd miet-clifford/miet
-```
 
 ---
 
@@ -23,52 +44,58 @@ From the repo root:
 pip install -e ".[dev]"
 ```
 
-This installs the `src` package in editable mode plus all runtime dependencies
-(`numpy`, `scipy`, `matplotlib`, `tqdm`) and `pytest`. The `pyproject.toml`
-at the repo root is the authoritative dependency specification.
+This installs the `miet_clifford` package in editable mode plus all runtime
+dependencies (`numpy`, `scipy`, `matplotlib`, `tqdm`) and `pytest`. The
+`pyproject.toml` at the repo root is the authoritative dependency specification.
 
 ---
 
 ## 3. Running tests
 
+From the repo root:
+
 ```bash
-pytest tests/ -v
+pytest -v
 ```
 
-37 tests cover tableau initialization, gate conjugation (H, S, CNOT), Bell and
+53 tests cover tableau initialization, gate conjugation (H, S, CNOT), Bell and
 GHZ entanglement entropy, measurement collapse and repeatability, GF(2) rank
-correctness, symplectic pairing invariants, and circuit-level volume-law /
-area-law behavior. All 37 must pass before trusting any numerical results.
-
-To also run reproducibility tests:
-
-```bash
-pytest tests/test_reproducibility.py -v
-```
+correctness, symplectic pairing invariants, circuit-level volume-law /
+area-law behavior, and Clifford sampler correctness. All 53 must pass before
+trusting any numerical results.
 
 ---
 
 ## 4. Running the physics audit
 
 ```bash
-python scripts/physics_audit.py
+# Makefile shortcut:
+make audit
+
+# Or directly (from repo root):
+python miet/scripts/physics_audit.py
 ```
 
 Runs 7 correctness checks (Bell entropy = 1 ebit, area-law saturation,
 volume-law scaling, measurement collapse, etc.). Output is written to
-`data/physics_audit.txt`. All 7 checks must pass.
+`miet/data/physics_audit.txt`. All 7 checks must pass. The audit uses a
+fixed seed (`AUDIT_SEED = 12345`) and produces identical output on every run.
 
 ---
 
 ## 5. Running a quick simulation
 
 ```bash
-python scripts/run_quick.py --seed 42
+# Makefile shortcut:
+make quick
+
+# Or directly (must run from miet/ because save path is CWD-relative):
+cd miet && python scripts/run_quick.py --seed 42
 ```
 
 Sweeps `L in {8, 12}` over 11 values of `p` in `[0, 0.5]` with 30 disorder
 realizations per point. Completes in under 60 seconds on a modern CPU.
-Results are checkpoint-saved to `data/quick_results.npz`.
+Results are checkpoint-saved to `miet/data/quick_results.npz`.
 
 The analysis scripts fall back to `quick_results.npz` when `sweep_results.npz`
 is absent, so figures can be previewed immediately after this step (with
@@ -79,44 +106,57 @@ reduced quality).
 ## 6. Running the full simulation sweep
 
 ```bash
-python scripts/run_sweep.py --seed 42
+# From miet/ (save path is CWD-relative):
+cd miet && python scripts/run_sweep.py --seed 42
 ```
 
 Sweeps `L in {8, 12, 16, 20, 24}` over 26 values of `p` in `[0, 0.5]` with
 200 disorder realizations per `(L, p)` point (26,000 total circuit runs).
-Results are checkpoint-saved to `data/sweep_results.npz` and a provenance
-record is written to `data/sweep_results_metadata.json`.
+Results are checkpoint-saved to `miet/data/sweep_results.npz` and a provenance
+record is written to `miet/data/sweep_results_metadata.json`.
+
+This target is intentionally not in the Makefile to prevent accidental 2-3
+hour runs.
 
 ---
 
 ## 7. Regenerating figures
 
-Run in this order (phase_diagram writes crossing data that log_scaling reads;
-finite_size writes FSS config that log_scaling reads):
-
 ```bash
-python analysis/circuit_schematic.py   # fig0 -- no data dependency
-python analysis/phase_diagram.py       # fig1 -- writes crossing_table.txt/json
-python analysis/finite_size.py         # fig3 -- writes fss_config.json
-python analysis/log_scaling.py         # fig2 -- reads crossing_table.txt, fss_config.json
-python analysis/critical_fit.py        # tabular summary -- writes critical_quantities.txt
+# Makefile shortcut (runs scripts in correct dependency order):
+make figures
+
+# Or individually from repo root:
+python miet/analysis/circuit_schematic.py   # fig0 -- no data dependency
+python miet/analysis/phase_diagram.py       # fig1 -- writes crossing_table.txt/json
+python miet/analysis/finite_size.py         # fig3 -- writes fss_config.json
+python miet/analysis/log_scaling.py         # fig2 -- reads crossing_table.txt, fss_config.json
+python miet/analysis/critical_fit.py        # tabular summary -- writes critical_quantities.txt
 ```
 
-All figures are written to `figures/` as both PDF and PNG.
+All figures are written to `miet/figures/` as both PDF and PNG.
 
 ---
 
 ## 8. Rebuilding the report
 
-Requires MiKTeX or TeX Live with RevTeX4-2.
-
 ```bash
-cd report/
+# Makefile shortcut:
+make report
+
+# On Windows with MiKTeX:
+make report PDFLATEX="C:/Users/.../MiKTeX/miktex/bin/x64/pdflatex.exe" \
+            BIBTEX="C:/Users/.../MiKTeX/miktex/bin/x64/bibtex.exe"
+
+# Or manually from miet/report/:
+cd miet/report
 pdflatex main.tex
 bibtex main
 pdflatex main.tex
 pdflatex main.tex
 ```
+
+Requires MiKTeX or TeX Live with RevTeX4-2.
 
 The compiled PDF is also provided at the repo root as `miet_research_report.pdf`.
 Copy it there after rebuilding:
