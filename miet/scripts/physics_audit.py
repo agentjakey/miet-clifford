@@ -3,12 +3,13 @@ Physics audit: seven correctness checks for the MIPT simulation.
 Output is written to data/physics_audit.txt and also printed to stdout.
 """
 
-import sys, os, io
+import os
+import io
+import sys
 import numpy as np
 from scipy.stats import linregress
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from src.simulation import load_results, single_sample
+from miet_clifford.simulation import load_results, single_sample
 
 SWEEP_PATH = os.path.join(os.path.dirname(__file__), "../data/sweep_results.npz")
 QUICK_PATH = os.path.join(os.path.dirname(__file__), "../data/quick_results.npz")
@@ -134,8 +135,8 @@ def check4_crossing(L_vals, p_vals, mean_S, tee):
 
 def check5_bell_entropy(tee):
     """Bell state |Phi+> has S([0]) = 1.0 ebit."""
-    from src.stabilizer import StabilizerState
-    from src.entropy import entanglement_entropy
+    from miet_clifford.stabilizer import StabilizerState
+    from miet_clifford.entropy import entanglement_entropy
 
     s = StabilizerState(2)
     s.apply_h(0)

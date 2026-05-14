@@ -4,9 +4,9 @@ Disorder-averaged simulation driver for the hybrid random Clifford circuit.
 
 import numpy as np
 from tqdm import tqdm
-from src.circuit import run_circuit
-from src.entropy import half_chain_entropy
-from src.metadata import collect_metadata, save_metadata
+from miet_clifford.circuit import run_circuit
+from miet_clifford.entropy import half_chain_entropy
+from miet_clifford.metadata import collect_metadata, save_metadata
 
 
 def single_sample(n_qubits, p_meas, n_steps, warmup=None, rng=None):

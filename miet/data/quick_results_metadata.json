@@ -1,0 +1,31 @@
+{
+  "L_values": [
+    8,
+    12
+  ],
+  "p_values": [
+    0.0,
+    0.05,
+    0.1,
+    0.15000000000000002,
+    0.2,
+    0.25,
+    0.30000000000000004,
+    0.35000000000000003,
+    0.4,
+    0.45,
+    0.5
+  ],
+  "n_samples": 30,
+  "warmup_rule": "warmup_fn(L); L=8 -> 24",
+  "main_layers_rule": "n_steps_fn(L); L=8 -> 32",
+  "total_circuit_depth_rule": "warmup_layers + main_layers per realization",
+  "measurements_applied_during_warmup": true,
+  "gate_ensemble": "1Q gates: uniform over the verified 24-element single-qubit Clifford group (programmatically enumerated and deduplicated by Pauli action); 2Q gates: decomposition (1Q)\u00b7CNOT_01\u00b7(1Q)\u00b7CNOT_10\u00b7(1Q)\u00b7(1Q) with 6 independent uniform 1Q draws + 2 CNOTs; the full 2-qubit ensemble is not verified as a uniform sampler over the 11520-element 2-qubit Clifford group",
+  "random_seed": 42,
+  "datetime_utc": "2026-05-14T15:57:07.589907+00:00",
+  "python_version": "3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]",
+  "numpy_version": "2.4.4",
+  "git_commit_hash": "98bd3ca",
+  "code_version": null
+}

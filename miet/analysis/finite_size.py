@@ -27,7 +27,6 @@ Literature: p_c ~ 0.16, nu ~ 1.28-1.3  (Li et al. 2019; Zabalo et al. 2020).
 
 import json
 import os
-import sys
 import warnings
 
 import matplotlib
@@ -51,8 +50,7 @@ mpl.rcParams.update(
     }
 )
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from src.simulation import load_results
+from miet_clifford.simulation import load_results
 
 SWEEP_PATH = os.path.join(os.path.dirname(__file__), "../data/sweep_results.npz")
 QUICK_PATH = os.path.join(os.path.dirname(__file__), "../data/quick_results.npz")

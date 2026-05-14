@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-import sys, time, argparse, numpy as np
+import time
+import argparse
+import numpy as np
 
-sys.path.insert(0, ".")
-from src.simulation import parameter_sweep, load_results
+from miet_clifford.simulation import parameter_sweep, load_results
 
 L_VALUES = [8, 12, 16, 20, 24]
 P_VALUES = np.linspace(0.0, 0.50, 26)

@@ -106,7 +106,7 @@ The compiled report is at [`miet_research_report.pdf`](miet_research_report.pdf)
 miet-clifford/
   pyproject.toml          # installable package (pip install -e ".[dev]")
   miet/
-    src/
+    miet_clifford/
       stabilizer.py       # Aaronson-Gottesman tableau
       entropy.py          # GF(2) rank entropy
       circuit.py          # brickwork hybrid circuit

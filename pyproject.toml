@@ -19,6 +19,7 @@ dev = ["pytest", "black"]
 
 [tool.setuptools.packages.find]
 where = ["miet"]
+include = ["miet_clifford*"]
 
 [tool.pytest.ini_options]
 testpaths = ["miet/tests"]

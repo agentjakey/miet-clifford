@@ -30,7 +30,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import linregress
-import os, sys
+import os
 
 mpl.rcParams.update(
     {
@@ -44,8 +44,7 @@ mpl.rcParams.update(
     }
 )
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from src.simulation import load_results
+from miet_clifford.simulation import load_results
 
 SWEEP_PATH = os.path.join(os.path.dirname(__file__), "../data/sweep_results.npz")
 QUICK_PATH = os.path.join(os.path.dirname(__file__), "../data/quick_results.npz")

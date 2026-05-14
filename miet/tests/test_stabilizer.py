@@ -4,12 +4,14 @@ Unit tests for the stabilizer tableau engine and entropy computation.
 
 import numpy as np
 import pytest
-import sys
-import os
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from src.stabilizer import StabilizerState
-from src.entropy import entanglement_entropy, half_chain_entropy, gf2_rank, _gf2_rank
+from miet_clifford.stabilizer import StabilizerState
+from miet_clifford.entropy import (
+    entanglement_entropy,
+    half_chain_entropy,
+    gf2_rank,
+    _gf2_rank,
+)
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -226,7 +228,7 @@ def test_deterministic_measurement_outcome_one():
 
 def test_circuit_volume_law():
     """p=0, large depth -> half-chain entropy should be well above 0."""
-    from src.circuit import run_circuit
+    from miet_clifford.circuit import run_circuit
 
     s = run_circuit(n_qubits=10, p_meas=0.0, n_steps=30)
     e = half_chain_entropy(s)
@@ -235,7 +237,7 @@ def test_circuit_volume_law():
 
 def test_circuit_area_law():
     """p=0.5, large depth -> half-chain entropy should be low."""
-    from src.circuit import run_circuit
+    from miet_clifford.circuit import run_circuit
 
     vals = [half_chain_entropy(run_circuit(10, 0.5, 50)) for _ in range(10)]
     assert np.mean(vals) < 2.0, f"Area-law entropy at p=0.5 too high: {np.mean(vals)}"
@@ -243,7 +245,7 @@ def test_circuit_area_law():
 
 def test_volume_exceeds_area():
     """Volume-law mean entropy must exceed area-law mean entropy."""
-    from src.circuit import run_circuit
+    from miet_clifford.circuit import run_circuit
 
     n = 12
     vol = np.mean([half_chain_entropy(run_circuit(n, 0.0, 20)) for _ in range(5)])

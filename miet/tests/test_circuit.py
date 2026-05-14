@@ -1,24 +1,21 @@
 """
-Tests for the single-qubit Clifford sampler in src/circuit.py.
+Tests for the single-qubit Clifford sampler in miet_clifford/circuit.py.
 
 Verifies that SINGLE_QUBIT_CLIFFORDS contains exactly 24 entries with
 24 distinct Pauli-conjugation actions and that every entry maps Pauli
 operators to Pauli operators with correct signs.
 """
 
-import sys
-import os
 import numpy as np
 import pytest
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from src.circuit import (
+from miet_clifford.circuit import (
     SINGLE_QUBIT_CLIFFORDS,
     _pauli_action,
     apply_single_qubit_clifford,
     random_single_qubit_clifford,
 )
-from src.stabilizer import StabilizerState
+from miet_clifford.stabilizer import StabilizerState
 
 # ---------------------------------------------------------------------------
 # Helpers

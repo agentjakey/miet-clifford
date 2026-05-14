@@ -27,7 +27,7 @@ jobs:
       - name: Smoke simulation
         run: |
           python - <<'EOF'
-          from src.simulation import disorder_average
+          from miet_clifford.simulation import disorder_average
           result = disorder_average(4, 0.10, 8, n_samples=5, warmup=4, seed=0)
           assert result['mean'] >= 0, f"negative entropy: {result['mean']}"
           assert result['sem'] >= 0,  f"negative SEM: {result['sem']}"

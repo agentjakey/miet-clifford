@@ -20,10 +20,11 @@ import numpy as np
 from scipy.optimize import minimize
 from scipy.stats import linregress
 from scipy.interpolate import interp1d
-import os, sys, warnings
+import os
+import sys
+import warnings
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from src.simulation import load_results
+from miet_clifford.simulation import load_results
 
 SWEEP_PATH = os.path.join(os.path.dirname(__file__), "../data/sweep_results.npz")
 QUICK_PATH = os.path.join(os.path.dirname(__file__), "../data/quick_results.npz")

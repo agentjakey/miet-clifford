@@ -4,12 +4,10 @@ Tests for reproducible seeding and metadata persistence.
 
 import json
 import os
-import sys
 import numpy as np
 import pytest
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from src.simulation import disorder_average, parameter_sweep
+from miet_clifford.simulation import disorder_average, parameter_sweep
 
 REQUIRED_METADATA_FIELDS = [
     "L_values",
