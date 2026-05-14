@@ -1,14 +1,19 @@
 """
 Critical quantities summary for the MIPT.
 
-Computes and tabulates p_c, nu, alpha, alpha_vol, S_inf by re-running the
-estimators from Figs 1-3 against the best available data.
+Computes and tabulates p_cross_eff, p_fss_eff, nu_eff, alpha_eff, alpha_vol,
+and S_inf by re-running the estimators from Figs 1-3 against the best
+available data.
 
-NOTE on alpha:
-  alpha is the coefficient in S(L/2) = alpha*ln(L/2) + const at p_c.
-  Li et al. (2019) PRB 100, 134306 report alpha ~ 1.6 for random Clifford
-  circuits.  We do NOT convert to c_eff = 6*alpha: the MIPT is not a
-  standard CFT (Jian et al. PRB 101, 104302, 2020).
+All extracted quantities are finite-size effective estimates from L <= 24.
+They are not thermodynamic values: the dominant source of deviation from
+literature is systematic finite-size bias, not statistical noise.
+
+NOTE on alpha_eff:
+  alpha_eff is the coefficient in S(L/2) = alpha_eff*ln(L/2) + const at p_c.
+  Li et al. (2019) PRB 100, 134306 report alpha(p_c) ~ 1.6 for random
+  Clifford circuits at L >> 100.  We do NOT convert to c_eff = 6*alpha_eff:
+  the MIPT is not a standard CFT (Jian et al. PRB 101, 104302, 2020).
 """
 import numpy as np
 from scipy.optimize import minimize
@@ -276,16 +281,16 @@ def main():
     s_inf, s_inf_err = _area_law(L_vals, p_vals, mean_S, sem_S)
 
     rows = [
-        ("p_c (crossing of S curves, Fig 1)",
+        ("p_cross_eff (crossing of S curves, Fig 1)",
          _fmt(pc_cross, pc_cross_err),
          "~0.16  (Li+ 2019)"),
-        ("p_c (FSS collapse, Fig 3)",
+        ("p_fss_eff (FSS collapse, Fig 3)",
          _fmt(pc_fss, pc_fss_err),
          "~0.16  (Li+ 2019)"),
-        ("nu   (correlation exponent, Fig 3)",
+        ("nu_eff (correlation exponent, Fig 3)",
          _fmt(nu, nu_err),
          "~1.3   (Zabalo+ 2020)"),
-        (f"alpha (log-scaling at p={p_used:.3f}, Fig 2)",
+        (f"alpha_eff (log-scaling at p={p_used:.3f}, Fig 2)",
          _fmt(alpha, alpha_err),
          "~1.6   (Li+ 2019)"),
         ("alpha_vol (volume-law coeff, p=0)",
@@ -298,9 +303,9 @@ def main():
 
     table = _build_table(rows)
     note = (
-        "\nNOTE: alpha is the coefficient in S(L/2) = alpha * ln(L/2) + const at p_c.\n"
-        "Li et al. (2019) PRB 100, 134306 report alpha(p_c) ~ 1.6 for random Clifford circuits.\n"
-        "Do NOT convert to c_eff = 6*alpha: the MIPT is not a standard CFT.\n"
+        "\nNOTE: alpha_eff is the coefficient in S(L/2) = alpha_eff * ln(L/2) + const at p_c.\n"
+        "Li et al. (2019) PRB 100, 134306 report alpha(p_c) ~ 1.6 for random Clifford circuits at L >> 100.\n"
+        "Do NOT convert to c_eff = 6*alpha_eff: the MIPT is not a standard CFT.\n"
         "(Jian, You, Vasseur, Ludwig, PRB 101, 104302, 2020)\n"
     )
     if n_L < 3:
@@ -308,13 +313,19 @@ def main():
                  "FSS and log-scaling fits are under-constrained.\n"
                  "Run scripts/run_sweep.py to completion for reliable exponents.\n")
 
+    header = (
+        "MIPT Critical Quantities\n"
+        + "=" * 70 + "\n\n"
+        + "NOTE: All p_c, nu, and alpha quantities reported here are finite-size\n"
+        + "effective estimates from L <= 24 unless explicitly labeled as literature\n"
+        + "values. Systematic finite-size bias dominates over statistical uncertainty.\n\n"
+    )
     output = table + "\n" + note
     print("\n" + output)
 
     os.makedirs(os.path.dirname(OUT_TXT), exist_ok=True)
     with open(OUT_TXT, "w") as f:
-        f.write("MIPT Critical Quantities\n")
-        f.write("=" * 70 + "\n\n")
+        f.write(header)
         f.write(output)
     print(f"Saved {OUT_TXT}")
 

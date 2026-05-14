@@ -1,18 +1,22 @@
 MIPT Critical Quantities
 ======================================================================
 
-+------------------------------------------+-------------------+---------------------------+
-| Quantity                                 | This work         | Literature                |
-+------------------------------------------+-------------------+---------------------------+
-| p_c (crossing of S curves, Fig 1)        | 0.203 +/- 0.017   | ~0.16  (Li+ 2019)         |
-| p_c (FSS collapse, Fig 3)                | 0.209 +/- 0.008   | ~0.16  (Li+ 2019)         |
-| nu   (correlation exponent, Fig 3)       | 1.722 +/- 0.104   | ~1.3   (Zabalo+ 2020)     |
-| alpha (log-scaling at p=0.160, Fig 2)    | 0.270 +/- 0.074   | ~1.6   (Li+ 2019)         |
-| alpha_vol (volume-law coeff, p=0)        | 0.995 +/- 0.017   | ~1     (system dependent) |
-| S_inf (area-law saturation, L=24, p=0.5) | 0.105 +/- 0.022   | O(1)   (area law)         |
-+------------------------------------------+-------------------+---------------------------+
+NOTE: All p_c, nu, and alpha quantities reported here are finite-size
+effective estimates from L <= 24 unless explicitly labeled as literature
+values. Systematic finite-size bias dominates over statistical uncertainty.
 
-NOTE: alpha is the coefficient in S(L/2) = alpha * ln(L/2) + const at p_c.
-Li et al. (2019) PRB 100, 134306 report alpha(p_c) ~ 1.6 for random Clifford circuits.
-Do NOT convert to c_eff = 6*alpha: the MIPT is not a standard CFT.
++----------------------------------------------+-------------------+---------------------------+
+| Quantity                                     | This work         | Literature                |
++----------------------------------------------+-------------------+---------------------------+
+| p_cross_eff (crossing of S curves, Fig 1)    | 0.203 +/- 0.017   | ~0.16  (Li+ 2019)         |
+| p_fss_eff (FSS collapse, Fig 3)              | 0.209 +/- 0.008   | ~0.16  (Li+ 2019)         |
+| nu_eff (correlation exponent, Fig 3)         | 1.722 +/- 0.104   | ~1.3   (Zabalo+ 2020)     |
+| alpha_eff (log-scaling at p=0.160, Fig 2)    | 0.270 +/- 0.074   | ~1.6   (Li+ 2019)         |
+| alpha_vol (volume-law coeff, p=0)            | 0.995 +/- 0.017   | ~1     (system dependent) |
+| S_inf (area-law saturation, L=24, p=0.5)     | 0.105 +/- 0.022   | O(1)   (area law)         |
++----------------------------------------------+-------------------+---------------------------+
+
+NOTE: alpha_eff is the coefficient in S(L/2) = alpha_eff * ln(L/2) + const at p_c.
+Li et al. (2019) PRB 100, 134306 report alpha(p_c) ~ 1.6 for random Clifford circuits at L >> 100.
+Do NOT convert to c_eff = 6*alpha_eff: the MIPT is not a standard CFT.
 (Jian, You, Vasseur, Ludwig, PRB 101, 104302, 2020)
