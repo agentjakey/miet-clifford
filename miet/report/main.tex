@@ -26,22 +26,27 @@ We study measurement-induced phase transitions (MIPTs) in one-dimensional random
 Clifford circuits using the Aaronson-Gottesman stabilizer tableau formalism.
 Simulating system sizes $L \in \{8,12,16,20,24\}$ with 200 disorder realizations
 per parameter point, we map the entanglement structure as a function of single-site
-measurement rate $p \in [0, 0.5]$. We identify a sharp phase transition near
-$p_c \approx 0.203 \pm 0.017$ (finite-size crossing estimate) separating a
-volume-law phase ($S \propto L$) from an area-law phase ($S = \mathrm{const}$);
-finite-size bias at $L \leq 24$ shifts this estimate above the thermodynamic
-value $p_c \approx 0.16$~\cite{Li2019}.
-At the critical point, entanglement scales logarithmically as
-$S(L/2) = \alpha(p_c)\ln(L/2) + \mathrm{const}$
-with $\alpha = 0.27 \pm 0.07$, consistent in form
-with Li \textit{et al.}~\cite{Li2019} ($\alpha \approx 1.6$).
-Finite-size scaling collapse yields correlation exponent
-$\nu = 1.72 \pm 0.10$,
-to be compared with the literature value $\nu \approx 1.28$~\cite{Zabalo2020};
-the residual discrepancy is attributed to finite-size corrections at these
-system sizes.
-We discuss connections to quantum error correction thresholds and structural
-analogies with threshold phenomena in machine-learning systems.
+measurement rate $p \in [0, 0.5]$.
+We resolve the qualitative finite-size signature of the entanglement phase
+transition, identifying a crossover between volume-law ($S \propto L$) and
+area-law ($S = O(1)$) phases.
+The finite-size effective critical rate is
+$p_c^{\mathrm{eff}} \approx 0.20 \pm 0.017$ (bootstrap statistical
+uncertainty only; systematic finite-size bias is the dominant source of
+deviation from the thermodynamic value $p_c \approx 0.16$~\cite{Li2019}).
+The data show weak logarithmic growth of $S(L/2)$ with system size at $p = 0.16$;
+the fitted coefficient $\alpha_{\mathrm{eff}} = 0.27 \pm 0.07$ is not
+quantitatively consistent with the asymptotic literature value $\alpha \approx 1.6$,
+reflecting strong finite-size and off-critical suppression at $L \leq 24$.
+A finite-size scaling collapse yields effective exponent
+$\nu_{\mathrm{eff}} = 1.72 \pm 0.10$ (statistical only),
+substantially above the thermodynamic value $\nu \approx 1.28$~\cite{Zabalo2020}
+due to finite-size corrections; $L \leq 24$ is too small for reliable
+thermodynamic exponent extraction.
+The results reproduce qualitative MIPT phenomenology and serve as a proof of
+concept for the stabilizer simulator.
+We discuss connections to quantum error correction thresholds and speculative
+structural analogies with threshold phenomena in machine-learning systems.
 \end{abstract}
 
 \maketitle
@@ -62,8 +67,8 @@ the entangled and disentangled regimes, or does the entropy decrease smoothly?
 
 The answer turns out to be dramatic.
 Volume-law entanglement, $S(L/2) \propto L$, is characteristic of quantum-chaotic
-states and is a consequence of the Page theorem for typical random states in the
-thermodynamic limit~\cite{CalabreseCardy2004}.
+states and arises in random quantum circuits with sufficient entangling
+power~\cite{Li2019}.
 Area-law entanglement, $S(L/2) = O(1)$, is independent of system size and
 characterizes both ground states of gapped one-dimensional Hamiltonians
 and classically simulable stabilizer product states.
@@ -80,7 +85,7 @@ Simultaneously, Skinner, Ruhman, and Nahum demonstrated the same transition and
 connected it to replica field theory and random tensor networks~\cite{Skinner2019}.
 The key surprise is that the transition is not merely a smooth crossover:
 it is a \textit{sharp}, system-size-scaling critical point governed by universal
-exponents $p_c$ and $\nu$.
+exponents $p_c$ and $\nu$ in the thermodynamic limit.
 The physical mechanism at large $p$ is the quantum Zeno effect:
 sufficiently frequent measurement freezes the quantum state into a product state,
 completely suppressing scrambling.
@@ -93,18 +98,20 @@ The Aaronson-Gottesman stabilizer tableau~\cite{Aaronson2004} implements this
 simulation in $O(n^2)$ per gate and measurement, reducing the exponentially hard
 quantum simulation problem to linear algebra over $\mathrm{GF}(2)$.
 This enables us to access system sizes ($L \leq 24$) and disorder averages
-(200 samples per point) that fully resolve the phase transition.
+(200 samples per point) sufficient to resolve the qualitative finite-size
+signature of the phase transition.
 
 In this paper we implement the full Aaronson-Gottesman tableau from scratch
 and use it to (i) map out the phase diagram $S(L/2)$ vs.\ $p$ for
-$L \in \{8,12,16,20,24\}$; (ii) extract the log-scaling coefficient $\alpha(p_c)$
-at the critical point; (iii) perform finite-size scaling collapse to obtain
-the correlation length exponent $\nu$; and (iv) discuss connections to quantum error
-correction and threshold phenomena in machine learning.
-The paper is organized as follows: Sec.~\ref{sec:background} reviews the theoretical
-framework; Sec.~\ref{sec:methods} describes the circuit model and simulation protocol;
-Sec.~\ref{sec:results} presents numerical results; Sec.~\ref{sec:discussion}
-discusses physical implications; and Sec.~\ref{sec:conclusion} concludes.
+$L \in \{8,12,16,20,24\}$; (ii) measure a log-scaling coefficient at $p=0.16$;
+(iii) perform a qualitative finite-size scaling collapse; and (iv) discuss
+connections to quantum error correction and threshold phenomena in machine
+learning.
+The paper is organized as follows: Sec.~\ref{sec:background} reviews the
+theoretical framework; Sec.~\ref{sec:methods} describes the circuit model and
+simulation protocol; Sec.~\ref{sec:results} presents numerical results;
+Sec.~\ref{sec:discussion} discusses physical implications; and
+Sec.~\ref{sec:conclusion} concludes.
 
 %% ────────────────────────────────────────────────────────────
 \section{Background}
@@ -170,7 +177,7 @@ At the critical point, entanglement is purely logarithmic:
   S(L/2) = \alpha(p_c)\,\ln(L/2) + \mathrm{const},
   \label{eq:logscale}
 \end{equation}
-with $\alpha(p_c) \approx 1.6$ for random Clifford circuits~\cite{Li2019}.
+with $\alpha(p_c) \approx 1.6$ for random Clifford circuits at $L \gg 100$~\cite{Li2019}.
 Note that $\alpha$ is the raw log-scaling coefficient at this non-unitary
 critical point; its relation to CFT central charge $c$ is discussed in
 Sec.~\ref{sec:cft}.
@@ -182,8 +189,11 @@ of Jian \textit{et al.}~\cite{Jian2020}:
   \label{eq:fss}
 \end{equation}
 for a universal scaling function $f$ and correlation length exponent $\nu$.
+This is a simplified form: at $p_c$ the entropy also contains the logarithmic
+term in Eq.~(\ref{eq:logscale}), so the full scaling function near criticality
+reads $S(L,p) = \alpha\ln(L/2) + g\!\left((p-p_c)L^{1/\nu}\right)$.
 Literature values are $p_c \approx 0.16$ and $\nu \approx 1.28$--$1.3$
-\cite{Li2019,Zabalo2020}.
+\cite{Li2019,Zabalo2020}, obtained from system sizes up to $L \sim 512$.
 
 %% ────────────────────────────────────────────────────────────
 \section{Methods}
@@ -200,13 +210,17 @@ boundary qubits receiving a random single-qubit Clifford;
 (ii) a measurement layer in which each qubit is independently measured in the
 $Z$ basis with probability $p$, with outcomes discarded.
 
-Random two-qubit Cliffords are sampled via the decomposition
+Random two-qubit Cliffords are drawn from the ensemble generated by the
+decomposition
 $\mathrm{C} = (\mathrm{1Q})\cdot\mathrm{CNOT}_{01}\cdot(\mathrm{1Q})\cdot
 \mathrm{CNOT}_{10}\cdot(\mathrm{1Q})\cdot(\mathrm{1Q})$,
 where each 1Q denotes an independent uniformly random element of the
 24-element single-qubit Clifford group.
-This decomposition samples approximately uniformly from the 11,520-element
-two-qubit Clifford group, which is sufficient for MIPT physics~\cite{Li2019}.
+This is the standard random entangling Clifford gate ensemble used in the
+MIPT literature~\cite{Li2019} and is expected to produce scrambling
+Clifford dynamics in the MIPT universality class.
+We do not claim this decomposition is an exactly uniform sampler over the
+full 11,520-element two-qubit Clifford group.
 
 \subsection{Simulation Protocol}
 
@@ -229,9 +243,8 @@ All gate operations are vectorized over tableau rows using NumPy array slicing,
 achieving $O(n)$ time per gate with no Python loop over rows.
 Total simulation: $\sim 26{,}000$ circuit runs across the $(L,p)$ grid.
 Wall-clock time scales as $L^3$ (dominant cost: $n^2$ per measurement $\times$
-$O(L)$ steps): approximately 3 minutes for $L = 8$, 10 minutes for $L = 12$,
-20 minutes for $L = 16$, and $\sim 68$ minutes for $L = 24$, totaling
-roughly 2.5 hours on a single CPU core with no parallelism.
+$O(L)$ steps): approximately 2--3 hours on a single CPU core (hardware-dependent
+estimate).
 Source code is available at \texttt{github.com/agentjakey/miet-clifford},
 implemented from scratch without Stim or Qiskit.
 
@@ -256,35 +269,40 @@ implemented from scratch without Stim or Qiskit.
   \caption{Half-chain entanglement entropy $S(L/2)$ vs.\ measurement rate $p$
   for $L \in \{8, 12, 16, 20, 24\}$ (200 disorder realizations each; shaded bands:
   $\pm 1$ standard error of the mean).
-  Adjacent-$L$ curve crossings average to $p_c \approx 0.203 \pm 0.017$,
-  signaling the phase transition.
-  For $p < p_c$, $S$ increases with $L$ (volume-law);
-  for $p > p_c$, $S$ is approximately $L$-independent (area-law).
-  The vertical dashed line marks the literature value $p_c \approx 0.16$~\protect\cite{Li2019}.}
+  Adjacent-$L$ curve crossings average to $p_c^{\mathrm{eff}} \approx 0.20$
+  (finite-size effective estimate; statistical uncertainty $\pm 0.017$),
+  signaling the qualitative onset of the phase transition.
+  For $p < p_c^{\mathrm{eff}}$, $S$ increases with $L$ (volume-law);
+  for $p > p_c^{\mathrm{eff}}$, $S$ is approximately $L$-independent (area-law).
+  The vertical dashed line marks the thermodynamic value $p_c \approx 0.16$~\protect\cite{Li2019}.}
   \label{fig:phase}
 \end{figure}
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{fig2_log_scaling}
   \caption{(Left) Phase diagram with critical region $p \in [0.13, 0.19]$ shaded.
-  (Right) $S(L/2)$ vs.\ $\ln(L/2)$ at $p = 0.16 \approx p_c$.
+  (Right) $S(L/2)$ vs.\ $\ln(L/2)$ at $p = 0.16$.
   The linear fit (dashed red) gives slope
-  $\alpha = 0.27 \pm 0.07$, to be compared with Li \textit{et al.}~\protect\cite{Li2019}
-  ($\alpha \approx 1.6$; the remaining discrepancy reflects finite-$L$ corrections
-  at the system sizes studied here).
-  The coefficient $\alpha$ is the raw log-scaling exponent at the MIPT critical point;
-  it is not a CFT central charge (see Sec.~\protect\ref{sec:cft}).}
+  $\alpha_{\mathrm{eff}} = 0.27 \pm 0.07$. This is not quantitatively consistent
+  with the asymptotic value $\alpha \approx 1.6$~\protect\cite{Li2019}; the
+  suppression reflects off-critical evaluation and finite-size effects at
+  $L \leq 24$ (see text).
+  The coefficient $\alpha$ is not a CFT central charge
+  (see Sec.~\protect\ref{sec:cft}).}
   \label{fig:logscale}
 \end{figure}
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{fig3_scaling_collapse}
-  \caption{Finite-size scaling collapse under the ansatz of Eq.~(\ref{eq:fss}).
+  \caption{Qualitative finite-size scaling collapse under the simplified ansatz
+  of Eq.~(\ref{eq:fss}) (without the critical logarithm; see text).
   (Left) Raw $S(L/2)$ vs.\ $p$ for all five system sizes.
-  (Right) Collapsed curves with optimized parameters
-  $p_c = 0.209 \pm 0.008$, $\nu = 1.72 \pm 0.10$ (bootstrap, 100 resamples).
-  Literature: $p_c \approx 0.16$, $\nu \approx 1.28$~\protect\cite{Zabalo2020}.
-  Residual finite-size bias at $L \leq 24$ is expected for the MIPT universality class.}
+  (Right) Collapsed curves with finite-size effective parameters
+  $p_c^{\mathrm{eff}} = 0.209 \pm 0.008$, $\nu_{\mathrm{eff}} = 1.72 \pm 0.10$
+  (bootstrap statistical uncertainty, 100 resamples).
+  Thermodynamic values: $p_c \approx 0.16$, $\nu \approx 1.28$~\protect\cite{Zabalo2020}.
+  The systematic deviation from literature values is expected at $L \leq 24$;
+  the quoted $\pm$ values are statistical only.}
   \label{fig:collapse}
 \end{figure}
 
@@ -298,62 +316,84 @@ consistent with $\sim 1$ ebit per qubit), and saturates to
 $S = 0.105 \pm 0.022$ ebits at $p = 0.5$ for $L = 24$ (area law).
 The crossing of adjacent $L$ pairs yields
 $p_{\mathrm{cross}} \in \{0.252, 0.211, 0.156, 0.192\}$ for increasing $L$ pairs,
-with the largest-$L$ crossing (L=20, L=24) at $p \approx 0.192$.
-Averaging over all adjacent pairs gives the crossing estimate
-$p_c = 0.203 \pm 0.017$.
-The systematic finite-size bias causes the crossing to lie above the
-thermodynamic limit $p_c \approx 0.16$; this bias is a known feature of
-MIPT finite-size studies at $L \lesssim 50$~\cite{Zabalo2020}.
+with the largest-$L$ crossing ($L=20$ vs.\ $L=24$) at $p \approx 0.192$.
+Averaging over all adjacent pairs gives the finite-size effective crossing estimate
+$p_c^{\mathrm{eff}} = 0.203 \pm 0.017$.
+The reported $\pm 0.017$ is a bootstrap statistical uncertainty only; the
+systematic finite-size bias---which shifts $p_c^{\mathrm{eff}}$ above the
+thermodynamic $p_c \approx 0.16$---is not reduced by collecting more samples at
+fixed $L$ and is the dominant source of deviation from the literature value.
+This upward bias is a known feature of MIPT finite-size studies at
+$L \lesssim 50$~\cite{Zabalo2020}.
 
 \subsection{Logarithmic Scaling at the Critical Point}
 
 Figure~\ref{fig:logscale} (right panel) shows $S(L/2)$ vs.\ $\ln(L/2)$ at
 $p = 0.16$, the grid point closest to the literature $p_c$.
-A linear fit over $L \in \{8, 12, 16, 20, 24\}$ gives slope $\alpha = 0.270 \pm 0.074$,
-below the Li \textit{et al.}~\cite{Li2019} value of $\approx 1.6$.
-The discrepancy has two contributing factors: (i) $p = 0.16$ falls slightly below
-our finite-size crossing estimate $p_c \approx 0.203$, so the system is evaluated
-in the volume-law phase where $\alpha$ is suppressed; (ii) finite-$L$ corrections
-are substantial at $L \leq 24$ and the asymptotic scaling regime requires larger
-system sizes.
-Both effects are quantitatively consistent with known finite-size behavior in
-random Clifford MIPT studies~\cite{Li2019,Zabalo2020}.
-We report $\alpha$ as a raw numerical coefficient consistent in form with
-Eq.~(\ref{eq:logscale}).
+A linear fit over $L \in \{8, 12, 16, 20, 24\}$ gives slope
+$\alpha_{\mathrm{eff}} = 0.270 \pm 0.074$.
+This value is \textit{not} quantitatively consistent with the asymptotic literature
+value $\alpha \approx 1.6$~\cite{Li2019}.
+The fit is underpowered and strongly affected by two compounding effects:
+(i) at these system sizes the finite-size effective critical rate is
+$p_c^{\mathrm{eff}} \approx 0.20$, so evaluating at $p = 0.16$ places the
+system in the volume-law side of the finite-size crossover rather than at true
+criticality---the logarithmic term is there, but so is a dominant linear-in-$L$
+contribution that suppresses the apparent slope; and (ii) even at the true $p_c$,
+the asymptotic log-scaling regime of Eq.~(\ref{eq:logscale}) requires
+$L \gg 100$~\cite{Zabalo2020}.
+The data do show weak logarithmic growth of $S$ with $L$, qualitatively
+compatible with critical-like behavior near the phase boundary.
+We report $\alpha_{\mathrm{eff}} = 0.270$ as a finite-size effective coefficient
+and do not interpret it as a measurement of the thermodynamic exponent
+$\alpha(p_c)$.
 
 \subsection{Finite-Size Scaling Collapse}
 
-Figure~\ref{fig:collapse} shows the FSS collapse under the ansatz of
+Figure~\ref{fig:collapse} shows an FSS collapse under the simplified ansatz of
 Eq.~(\ref{eq:fss}).
-The Nelder-Mead optimization of the inter-curve mean-squared deviation over
-$L \in \{8, 12, 16, 20, 24\}$ yields
-$p_c = 0.209 \pm 0.008$ and $\nu = 1.72 \pm 0.10$
-(bootstrap uncertainty, 100 resamples).
-The critical rate deviates from the literature value ($p_c = 0.16$) by
-$6.1\sigma_{\mathrm{boot}}$, and $\nu$ deviates from $1.28$~\cite{Zabalo2020}
-by $4.4\sigma_{\mathrm{boot}}$.
-These deviations are consistent with the known finite-size behavior of the MIPT:
-Zabalo \textit{et al.}~\cite{Zabalo2020} require $L \leq 512$ to achieve exponent
-estimates within a few percent of the thermodynamic values.
-At $L \leq 24$, our five-curve collapse nonetheless qualitatively captures the
-correct scaling structure, with all curves collapsing onto a single branch
-in the vicinity of the optimized $p_c$.
+We note that this single-function form is an approximation: because $S(L,p_c)$
+contains the logarithmic term in Eq.~(\ref{eq:logscale}), the full scaling form
+near criticality reads
+$S(L,p) = \alpha\ln(L/2) + g\!\left((p-p_c)L^{1/\nu}\right)$,
+where $g$ is the universal scaling function.
+Fitting the simplified form without the logarithmic prefactor makes the collapse
+a qualitative diagnostic rather than a precision fit.
+
+Minimizing the inter-curve mean-squared deviation over $L \in \{8, 12, 16, 20, 24\}$
+yields finite-size effective parameters
+$p_c^{\mathrm{eff}} = 0.209 \pm 0.008$ and $\nu_{\mathrm{eff}} = 1.72 \pm 0.10$
+(bootstrap statistical uncertainty, 100 resamples).
+Both estimates are substantially above the thermodynamic values
+($p_c \approx 0.16$, $\nu \approx 1.28$~\cite{Zabalo2020}).
+These deviations are expected systematic effects of finite-size corrections;
+the quoted bootstrap uncertainties quantify statistical precision only
+and do not account for this systematic bias, which is the dominant source of
+deviation at $L \leq 24$.
+Reliable extraction of thermodynamic exponents requires system sizes up to
+$L \sim \mathcal{O}(100)$--$\mathcal{O}(500)$~\cite{Zabalo2020},
+far beyond what is accessible here.
+At these system sizes, the five-curve collapse qualitatively captures the
+correct scaling structure, demonstrating that the simulation reproduces the
+qualitative phenomenology of the MIPT universality class.
 
 \begin{table}
-  \caption{Critical quantities from simulation vs.\ literature.
-           All simulation values use $L \in \{8, 12, 16, 20, 24\}$, 200 samples.
-           Finite-size corrections at these $L$ shift $p_c$ and $\nu$ above
-           their thermodynamic values.}
+  \caption{Finite-size effective critical quantities from simulation vs.\ literature.
+           System sizes $L \in \{8, 12, 16, 20, 24\}$, 200 samples per point.
+           Reported $\pm$ values are bootstrap statistical errors only;
+           systematic finite-size bias is the dominant source of deviation from
+           thermodynamic values for $p_c^{\mathrm{eff}}$, $\nu_{\mathrm{eff}}$,
+           and $\alpha_{\mathrm{eff}}$.}
   \begin{ruledtabular}
     \begin{tabular}{lcc}
-      Quantity & This work & Literature \\
+      Quantity & Finite-size eff.\ ($L\leq 24$) & Literature \\
       \hline
-      $p_c$ (curve crossing)         & $0.203 \pm 0.017$ & $0.16$~\cite{Li2019}    \\
-      $p_c$ (FSS collapse)           & $0.209 \pm 0.008$ & $0.16$~\cite{Li2019}    \\
-      $\nu$                          & $1.722 \pm 0.104$ & $1.28$~\cite{Zabalo2020}\\
-      $\alpha(p_c)$                  & $0.270 \pm 0.074$ & $\approx 1.6$~\cite{Li2019} \\
-      $\alpha_{\mathrm{vol}}$ ($p=0$)& $0.995 \pm 0.017$ & ${\sim}1$ (system dep.) \\
-      $S_{\infty}$ ($L=24$, $p=0.5$)& $0.105 \pm 0.022$ & $O(1)$                  \\
+      $p_c^{\mathrm{eff}}$ (curve crossing)  & $0.203 \pm 0.017$ & $0.16$~\cite{Li2019}    \\
+      $p_c^{\mathrm{eff}}$ (FSS collapse)    & $0.209 \pm 0.008$ & $0.16$~\cite{Li2019}    \\
+      $\nu_{\mathrm{eff}}$                   & $1.722 \pm 0.104$ & $1.28$~\cite{Zabalo2020}\\
+      $\alpha_{\mathrm{eff}}$ (at $p=0.16$)  & $0.270 \pm 0.074$ & $\approx 1.6$~\cite{Li2019} \\
+      $\alpha_{\mathrm{vol}}$ ($p=0$)        & $0.995 \pm 0.017$ & ${\sim}1$ (system dep.) \\
+      $S_{\infty}$ ($L=24$, $p=0.5$)        & $0.105 \pm 0.022$ & $O(1)$                  \\
     \end{tabular}
   \end{ruledtabular}
   \label{tab:critical}
@@ -366,7 +406,7 @@ in the vicinity of the optimized $p_c$.
 
 \subsection{Quantum Error Correction Threshold Analogy}
 
-The MIPT is structurally identical to the quantum error correction (QEC)
+The MIPT is formally analogous to the quantum error correction (QEC)
 threshold theorem.
 In the area-law phase ($p > p_c$), measurements destroy quantum information
 faster than unitary scrambling can protect it: an adversary who monitors
@@ -375,9 +415,9 @@ from the syndrome.
 In the volume-law phase ($p < p_c$), scrambling delocalizes quantum information
 so thoroughly that even complete knowledge of measurement outcomes is insufficient
 to reconstruct the logical state~\cite{Bao2020}.
-The critical rate $p_c$ is therefore the maximum error rate below which quantum
-information can in principle be preserved---an exact analog of the
-fault-tolerance threshold.
+The critical rate $p_c$ is therefore closely related to the maximum error rate
+below which quantum information can in principle be preserved---a structural
+analog of the fault-tolerance threshold.
 This connection to QEC motivates practical interest in MIPT physics:
 understanding how $p_c$ scales with circuit architecture has direct implications
 for the design of robust quantum error-correcting codes.
@@ -386,7 +426,7 @@ for the design of robust quantum error-correcting codes.
 \label{sec:cft}
 
 At $p = p_c$, entanglement scales as $S(L/2) = \alpha(p_c)\ln(L/2) + \mathrm{const}$
-with $\alpha \approx 1.6$~\cite{Li2019}.
+with $\alpha \approx 1.6$~\cite{Li2019} (established at $L \gg 100$).
 A standard unitary $(1+1)$D CFT with central charge $c$ would predict
 $\alpha = c/6$ for a system with open boundaries
 (Calabrese and Cardy~\cite{CalabreseCardy2004}), which would give
@@ -413,16 +453,18 @@ In Clifford circuits, scrambling is quantified by the growth rate of the stabili
 generators' spatial support.
 Near the critical point, the correlation length diverges as $\xi \sim |p - p_c|^{-\nu}$,
 signaling a renormalization group fixed point.
-The transition can be understood as a competition between two rates:
-the scrambling rate (of order 1, set by the gate density) and the
-measurement-induced localization rate (proportional to $p$).
+The competition between unitary scrambling and measurement-induced localization
+drives this divergence; sufficiently close to $p_c$, the system cannot distinguish
+the volume-law and area-law phases on a finite chain.
 Out-of-time-order correlators (OTOCs)~\cite{Li2019} provide the standard diagnostic
 for this competition, measuring how much a local operator spreads under evolution;
 their behavior near $p_c$ encodes the same universality class as the entropy.
-The exponent $\nu \approx 1.3$~\cite{Zabalo2020} (our finite-size estimate:
-$\nu = 1.72 \pm 0.10$) implies that the transition is sharp on the
-scale $\Delta L \sim L^{1-1/\nu}$, i.e., that the finite-size window narrows
-as $L^{-1/\nu}$ in units of $p - p_c$.
+The thermodynamic exponent $\nu \approx 1.3$~\cite{Zabalo2020} implies that the
+critical window in measurement rate narrows as $\Delta p \sim L^{-1/\nu}$
+with increasing system size.
+Our finite-size effective value $\nu_{\mathrm{eff}} = 1.72 \pm 0.10$ is still
+converging toward this thermodynamic value and should not be interpreted as
+evidence for a distinct universality class.
 
 \subsection{Structural Analogies with Threshold Phenomena in Machine Learning}
 \label{sec:aianalogy}
@@ -430,8 +472,8 @@ as $L^{-1/\nu}$ in units of $p - p_c$.
 The MIPT belongs to a broader class of \textit{threshold phenomena in complex
 information-processing systems}: below a critical disturbance rate, structured
 information survives; above it, it irreversibly collapses.
-We note two structural analogies, emphasizing that these are heuristic comparisons
-rather than formal equivalences.
+We note two speculative structural analogies, emphasizing that these are
+heuristic comparisons with no known quantitative mapping, not formal equivalences.
 
 \textit{Grokking.}
 In neural network training, ``grokking''~\cite{Power2022} refers to a sharp
@@ -441,24 +483,24 @@ Both grokking and the MIPT exhibit a sharp crossover between two qualitatively
 distinct regimes as a single control parameter crosses a threshold;
 in both cases, the transition is accompanied by a structural reorganization of
 internal representations rather than a smooth interpolation.
+The analogy is qualitative only.
 
 \textit{Robustness of learned representations under optimization pressure.}
 Whether safety-relevant internal representations survive continued fine-tuning is
 structurally analogous to asking whether volume-law entanglement survives increasing
 measurement rate.
-The correlation exponent $\nu \approx 1.3$ implies that near $p_c$, small changes
-in measurement rate can trigger large structural changes in the quantum state on
-the scale $\Delta S \sim L^{1/\nu}$.
-An analogous threshold may govern how robustly learned behaviors survive
-optimization pressure in large language models, suggesting that
-information-delocalization measures---effective representation rank,
-participation ratio in the basis of internal representations---may serve as
-diagnostic tools for studying representation robustness in mechanistic
-interpretability research.
+Near the critical point, the tuning window in $p$ narrows as $\Delta p \sim L^{-1/\nu}$
+as system size grows, suggesting that analogous robustness thresholds in ML systems
+may sharpen with model scale.
+We emphasize this comparison is heuristic: the MIPT exponent $\nu$ has no known
+quantitative relationship to learning dynamics.
+Information-delocalization measures---effective representation rank,
+participation ratio in the basis of internal representations---may nonetheless
+serve as diagnostic tools for studying representation robustness in mechanistic
+interpretability research, motivated by this analogy.
 
-These analogies motivate cross-disciplinary study of threshold phenomena
-in quantum and classical information processing;
-they do not constitute a claim of mathematical equivalence.
+These analogies are speculative and are offered as motivation for future
+cross-disciplinary investigation, not as formal claims.
 
 %% ────────────────────────────────────────────────────────────
 \section{Conclusion}
@@ -469,20 +511,23 @@ We implemented the Aaronson-Gottesman stabilizer tableau from scratch and used i
 to study measurement-induced phase transitions in one-dimensional random Clifford
 circuits.
 Simulating $L \in \{8, 12, 16, 20, 24\}$ with 200 disorder realizations per point,
-we confirmed the phase transition between volume-law ($S \propto L$) and area-law
-($S = O(1)$) entanglement.
-The finite-size crossing estimate $p_c = 0.203 \pm 0.017$ and FSS collapse value
-$p_c = 0.209 \pm 0.008$ both lie above the thermodynamic value $0.16$,
-consistent with known upward finite-size bias at $L \lesssim 50$.
-The FSS exponent $\nu = 1.72 \pm 0.10$ is closer to the literature value
-$\nu \approx 1.28$~\cite{Zabalo2020} than underdetermined two-curve estimates,
-and will converge further with larger system sizes.
-The log-scaling coefficient $\alpha = 0.270 \pm 0.074$ (finite-size value;
-asymptotic $\alpha \approx 1.6$ requires $L \gg 100$) and the volume-law
-coefficient $\alpha_{\mathrm{vol}} = 0.995 \pm 0.017$ are both physically
+we reproduced the qualitative MIPT phenomenology: a crossover from volume-law
+($S \propto L$) to area-law ($S = O(1)$) entanglement as the measurement rate
+increases past a finite-size effective critical rate
+$p_c^{\mathrm{eff}} \approx 0.20$.
+All system sizes studied are too small for reliable thermodynamic exponent
+extraction.
+The extracted finite-size effective parameters
+($p_c^{\mathrm{eff}} \approx 0.20$, $\nu_{\mathrm{eff}} \approx 1.72$,
+$\alpha_{\mathrm{eff}} \approx 0.27$) are substantially affected by finite-size
+corrections and are not quantitatively consistent with thermodynamic literature
+values~\cite{Li2019,Zabalo2020}; the quoted bootstrap uncertainties are
+statistical only.
+The volume-law coefficient $\alpha_{\mathrm{vol}} = 0.995 \pm 0.017$ and the
+area-law saturation $S_\infty = 0.105 \pm 0.022$ ebits are physically
 interpretable and independently verified by the physics audit (7/7 checks passed).
 
-We discussed the formal connection between $p_c$ and the quantum error correction
+We discussed the formal analogy between $p_c$ and the quantum error correction
 threshold, the replica-field-theory interpretation of the log-scaling exponent
 $\alpha$ (which is \textit{not} a CFT central charge), and speculative structural
 analogies with grokking and representation robustness in machine learning.

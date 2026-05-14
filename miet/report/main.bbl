@@ -73,15 +73,6 @@
   {https://doi.org/10.1103/PhysRevB.101.060301} {\bibfield  {journal} {\bibinfo
    {journal} {Phys. Rev. B}\ }\textbf {\bibinfo {volume} {101}},\ \bibinfo
   {pages} {060301} (\bibinfo {year} {2020})}\BibitemShut {NoStop}%
-\bibitem [{\citenamefont {Calabrese}\ and\ \citenamefont
-  {Cardy}(2004)}]{CalabreseCardy2004}%
-  \BibitemOpen
-  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {P.}~\bibnamefont
-  {Calabrese}}\ and\ \bibinfo {author} {\bibfnamefont {J.}~\bibnamefont
-  {Cardy}},\ }\href {https://doi.org/10.1088/1742-5468/2004/06/P06002}
-  {\bibfield  {journal} {\bibinfo  {journal} {J. Stat. Mech.}\ }\textbf
-  {\bibinfo {volume} {2004}},\ \bibinfo {pages} {P06002} (\bibinfo {year}
-  {2004})}\BibitemShut {NoStop}%
 \bibitem [{\citenamefont {Li}\ \emph {et~al.}(2018)\citenamefont {Li},
   \citenamefont {Chen},\ and\ \citenamefont {Fisher}}]{Li2018}%
   \BibitemOpen
@@ -145,6 +136,15 @@
   {https://doi.org/10.1103/PhysRevB.101.104301} {\bibfield  {journal} {\bibinfo
    {journal} {Phys. Rev. B}\ }\textbf {\bibinfo {volume} {101}},\ \bibinfo
   {pages} {104301} (\bibinfo {year} {2020})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Calabrese}\ and\ \citenamefont
+  {Cardy}(2004)}]{CalabreseCardy2004}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {P.}~\bibnamefont
+  {Calabrese}}\ and\ \bibinfo {author} {\bibfnamefont {J.}~\bibnamefont
+  {Cardy}},\ }\href {https://doi.org/10.1088/1742-5468/2004/06/P06002}
+  {\bibfield  {journal} {\bibinfo  {journal} {J. Stat. Mech.}\ }\textbf
+  {\bibinfo {volume} {2004}},\ \bibinfo {pages} {P06002} (\bibinfo {year}
+  {2004})}\BibitemShut {NoStop}%
 \bibitem [{\citenamefont {Power}\ \emph {et~al.}(2022)\citenamefont {Power},
   \citenamefont {Burda}, \citenamefont {Edwards}, \citenamefont {Babuschkin},\
   and\ \citenamefont {Misra}}]{Power2022}%
