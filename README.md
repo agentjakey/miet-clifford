@@ -1,194 +1,131 @@
-# miet-clifford
+# Measurement-Induced Entanglement Phase Transitions in 1D Random Clifford Circuits
 
-Numerical study of measurement-induced entanglement transitions (MIETs) in
-one-dimensional random Clifford circuits, implemented from scratch using the
-Aaronson-Gottesman stabilizer tableau formalism.
-
-PHYS 130B final project — University of California San Diego.
-
-> **Note:** This project reproduces qualitative finite-size signatures of the
-> measurement-induced entanglement transition. The reported values of
-> $p_c$, $\nu$, and $\alpha$ are finite-size effective estimates obtained from
-> system sizes $L \leq 24$, not precision thermodynamic estimates. See
-> [Scientific limitations](#scientific-limitations) below.
+PHYS 130B Final Project — University of California San Diego  
+Jacob Ortiz
 
 ---
 
-## What this project does
+Hybrid quantum circuits that interleave random unitary gates with projective
+measurements exhibit a sharp entanglement phase transition: below a critical
+measurement rate $p_c$, the system sits in a volume-law entangled phase
+($S(L/2) \propto L$); above it, measurements dominate and entanglement collapses
+to an area law ($S(L/2) = O(1)$). This transition — the measurement-induced phase
+transition (MIPT) — is one of the more striking results in recent quantum dynamics
+research, with structural connections to quantum error correction thresholds and
+replica field theory.
 
-A hybrid quantum circuit alternates brickwork layers of random two-qubit
-Clifford gates with single-site projective measurements applied at rate $p$.
-As $p$ increases, the system crosses from a volume-law entangled phase
-($S(L/2) \propto L$) to an area-law phase ($S(L/2) = O(1)$).
+This project implements the full simulation pipeline from scratch and reproduces
+the qualitative phenomenology of the MIPT at system sizes $L \leq 24$.
 
-This code:
-- Implements the full Aaronson-Gottesman $(2n) \times (2n+1)$ binary tableau
-  over GF(2) from scratch, without Stim or Qiskit.
-- Computes entanglement entropy via GF(2) rank (XOR Gaussian elimination),
-  not floating-point linear algebra.
-- Sweeps $(L, p)$ with disorder averaging and checkpoint-saves results.
-- Generates four figures: circuit schematic, phase diagram, log-scaling fit,
-  and a finite-size scaling collapse.
-- Runs a seven-check physics audit to verify correctness of the simulation.
-- Produces a compiled LaTeX report in RevTeX4-2 / PRL format.
+## What was built from scratch
 
-## Results summary
+- **Aaronson-Gottesman stabilizer tableau** — full $(2n) \times (2n+1)$ binary
+  matrix over GF(2), implementing H, S, CNOT, and projective measurement with
+  exact rowsum phase tracking. No Stim, no Qiskit.
+- **Entanglement entropy via GF(2) rank** — XOR Gaussian elimination on the
+  stabilizer submatrix restricted to one half of the chain. No floating-point
+  linear algebra.
+- **Brickwork hybrid circuit** — alternating layers of random two-qubit Cliffords
+  and single-site measurements at rate $p$, with configurable warmup thermalization.
+- **Disorder-averaged parameter sweep** — deterministic seeding via
+  `numpy.SeedSequence`, checkpoint saving, and companion metadata JSON for
+  full reproducibility.
+- **Analysis pipeline** — adjacent-size crossing analysis with bootstrap
+  uncertainty, FSS collapse with sensitivity analysis, multi-$p$ log-scaling
+  table, and all four report figures.
+- **LaTeX report** — 7-page write-up in RevTeX4-2 / PRL format with full
+  theoretical background, appendices, and citations.
 
-| Quantity | Finite-size eff. ($L \leq 24$) | Literature (thermodynamic) |
+## Main result
+
+The simulation reproduces the qualitative crossover from volume-law to area-law
+entanglement and all expected finite-size signatures of the MIPT.
+
+| Quantity | This project ($L \leq 24$) | Literature (thermodynamic) |
 |---|---|---|
-| $p_c$ (curve crossing) | $0.203 \pm 0.017$ | $\approx 0.16$ (Li et al. 2019) |
-| $p_c$ (FSS collapse) | $0.209 \pm 0.008$ | $\approx 0.16$ (Li et al. 2019) |
-| $\nu$ | $1.72 \pm 0.10$ | $\approx 1.28$ (Zabalo et al. 2020) |
-| $\alpha$ at $p = 0.16$ | $0.27 \pm 0.07$ | $\approx 1.6$ (Li et al. 2019, $L \gg 100$) |
-| $\alpha_{\mathrm{vol}}$ at $p = 0$ | $0.995 \pm 0.017$ | $\sim 1$ (volume-law, system-dependent) |
+| $p_c^{\mathrm{eff}}$ (curve crossing) | $0.203 \pm 0.017$ | $\approx 0.16$ (Li et al. 2019) |
+| $p_c^{\mathrm{eff}}$ (FSS collapse) | $0.209 \pm 0.008$ | $\approx 0.16$ (Li et al. 2019) |
+| $\nu_{\mathrm{eff}}$ | $1.72 \pm 0.10$ | $\approx 1.28$ (Zabalo et al. 2020) |
+| $\alpha_{\mathrm{eff}}$ at $p = 0.16$ | $0.27 \pm 0.07$ | $\approx 1.6$ (Li et al. 2019, $L \gg 100$) |
+| $\alpha_{\mathrm{vol}}$ at $p = 0$ | $0.995 \pm 0.017$ | $\sim 1$ (volume-law) |
 
-Reported $\pm$ values are bootstrap statistical uncertainties only.
-Systematic finite-size bias is the dominant source of deviation from
-thermodynamic values and cannot be reduced by collecting more samples at
-fixed $L$.
+Reported $\pm$ values are bootstrap statistical uncertainties. The dominant source
+of deviation from literature values is systematic finite-size bias, not
+statistical noise — it cannot be reduced by collecting more samples at fixed $L$.
 
-## Scientific limitations
+![Phase diagram: S(L/2) vs measurement rate p](miet/figures/fig1_phase_diagram.png)
 
-- **System sizes:** $L \in \{8, 12, 16, 20, 24\}$. These sizes are sufficient
-  to show qualitative finite-size signatures of the MIPT crossover but are too
-  small for reliable extraction of thermodynamic critical exponents. Precision
-  MIPT studies use $L$ up to $\sim 512$.
+*Half-chain entropy vs. measurement rate for $L \in \{8,12,16,20,24\}$.
+Shaded bands are $\pm 1$ SEM. The thermodynamic transition lies near $p \approx 0.16$
+(dashed); the finite-size effective crossing is near $p \approx 0.20$ (dotted),
+consistent with known finite-size bias at $L \lesssim 50$.*
 
-- **Disorder averaging:** 200 independent realizations per $(L, p)$ point.
-  Statistical uncertainties are small relative to systematic finite-size bias.
+## Main limitation
 
-- **Finite-size corrections:** The effective critical rate
-  $p_c^{\mathrm{eff}} \approx 0.20$ is above the thermodynamic value
-  $p_c \approx 0.16$ due to finite-size corrections, not a physical discrepancy.
-  This upward bias is well-documented in the MIPT literature at $L \lesssim 50$.
+At $L \leq 24$, the system has not entered the asymptotic critical scaling regime
+for any of the exponents studied. The extracted $p_c^{\mathrm{eff}}$,
+$\nu_{\mathrm{eff}}$, and $\alpha_{\mathrm{eff}}$ are finite-size effective
+estimates, not thermodynamic values. Precision MIPT studies use $L \sim 512$.
+This project is best described as a from-scratch reproduction of the qualitative
+phenomenology, not a precision numerical study.
 
-- **FSS collapse:** The collapse uses the simplified ansatz
-  $S(L,p) = f((p - p_c) \cdot L^{1/\nu})$, which omits the additive logarithmic
-  term present at criticality. The extracted $p_c^{\mathrm{eff}}$ and
-  $\nu_{\mathrm{eff}}$ are diagnostic, not precision thermodynamic estimates.
-
-- **Log-scaling fit:** The coefficient $\alpha_{\mathrm{eff}} = 0.27$ is fit
-  from five system sizes evaluated at $p = 0.16$, which lies below the
-  finite-size effective critical rate. The fit is underpowered and sensitive
-  to the chosen evaluation point. It is not quantitatively consistent with
-  the asymptotic value $\alpha \approx 1.6$ (established at $L \gg 100$).
-
-- **Gate ensemble:** Random two-qubit Cliffords are drawn from the decomposition
-  $(1\mathrm{Q}) \cdot \mathrm{CNOT}_{01} \cdot (1\mathrm{Q}) \cdot
-  \mathrm{CNOT}_{10} \cdot (1\mathrm{Q}) \cdot (1\mathrm{Q})$ with each 1Q
-  drawn uniformly from the 24-element single-qubit Clifford group. This ensemble
-  is expected to produce scrambling Clifford dynamics in the MIPT universality
-  class and matches the construction used in the literature. It is not verified
-  to be a uniform sampler over the full 11,520-element two-qubit Clifford group.
-  **Future work:** Implement or verify exact uniform two-qubit Clifford sampling.
-
-## Reproducing results
-
-All commands run from the `miet/` directory.
-
-### 1. Install dependencies
+## Running tests
 
 From the repo root:
 
 ```bash
 pip install -e ".[dev]"
+python -m pytest -v
 ```
 
-This installs the `src` package in editable mode along with all runtime
-dependencies and `pytest`. The legacy `miet/requirements.txt` is kept for
-reference but is superseded by `pyproject.toml`.
+37 tests cover tableau initialization, gate conjugation (H, S, CNOT), Bell and
+GHZ entanglement entropy, measurement collapse, symplectic pairing invariants,
+GF(2) rank, and circuit-level volume-law / area-law behavior. All 37 pass.
 
-### 2. Run the test suite
+## Reproducing results
+
+All simulation commands run from `miet/`. See [`docs/reproduce_results.md`](docs/reproduce_results.md) for the complete walkthrough. Quick version:
 
 ```bash
-pytest tests/ -v
+cd miet/
+python scripts/physics_audit.py        # 7 correctness checks
+python scripts/run_sweep.py --seed 42  # ~2-3 hours, saves data/sweep_results.npz
+python analysis/phase_diagram.py       # fig1 + crossing table
+python analysis/finite_size.py         # fig3 + fss_config.json
+python analysis/log_scaling.py         # fig2 + alpha table
 ```
 
-The tests cover: tableau initialization, Bell state entropy (primary correctness
-check), GHZ state, measurement collapse, Bell correlations, H-gate randomness,
-S-gate phase, GF(2) rank, deterministic measurement (Cases 1 and 2), and
-circuit-level volume-law / area-law behavior.
-
-### 3. Run the physics audit (7 correctness checks)
-
-```bash
-python scripts/physics_audit.py
-```
-
-Output is written to `data/physics_audit.txt`. All 7 checks must pass before
-trusting any numerical results.
-
-### 4. Quick simulation (small sizes, fast)
-
-```bash
-python scripts/run_quick.py
-```
-
-Runs a reduced $(L, p)$ sweep on $L \in \{4, 6, 8\}$ for fast sanity checking.
-Results are saved to `data/quick_results.npz`.
-
-### 5. Full parameter sweep
-
-```bash
-python scripts/run_sweep.py
-```
-
-Sweeps $L \in \{8, 12, 16, 20, 24\}$ over 26 values of $p \in [0, 0.5]$ with
-200 disorder realizations per point. Results are checkpoint-saved to
-`data/sweep_results.npz`. Wall-clock time: approximately 2-3 hours on a single
-CPU core.
-
-### 6. Regenerate figures
-
-Run after the full sweep completes:
-
-```bash
-python analysis/phase_diagram.py   # fig1_phase_diagram
-python analysis/log_scaling.py     # fig2_log_scaling
-python analysis/finite_size.py     # fig3_scaling_collapse
-python analysis/critical_fit.py    # prints critical quantities to data/
-```
-
-Figures are written to `figures/` as both PDF and PNG.
-
-### 7. Rebuild the report (requires MiKTeX or TeX Live)
-
-```bash
-cd report/
-pdflatex main.tex
-bibtex main
-pdflatex main.tex
-pdflatex main.tex
-```
-
-The compiled PDF is also provided at the repo root as `miet_research_report.pdf`.
+The compiled report is at [`miet_research_report.pdf`](miet_research_report.pdf).
 
 ## Repository structure
 
 ```
 miet-clifford/
+  pyproject.toml          # installable package (pip install -e ".[dev]")
   miet/
     src/
-      stabilizer.py     # Aaronson-Gottesman tableau (from scratch)
-      entropy.py        # GF(2) rank entanglement entropy
-      circuit.py        # brickwork hybrid circuit
-      simulation.py     # disorder averaging, parameter sweep, checkpointing
+      stabilizer.py       # Aaronson-Gottesman tableau
+      entropy.py          # GF(2) rank entropy
+      circuit.py          # brickwork hybrid circuit
+      simulation.py       # disorder averaging, sweep, checkpointing
     analysis/
-      phase_diagram.py
-      log_scaling.py
-      finite_size.py
-      critical_fit.py
+      phase_diagram.py    # fig1 + crossing analysis
+      log_scaling.py      # fig2 + alpha-vs-p table
+      finite_size.py      # fig3 + sensitivity analysis
+      critical_fit.py     # tabular summary
     scripts/
-      run_quick.py
-      run_sweep.py
-      physics_audit.py
+      run_quick.py        # L in {8,12}, fast sanity check
+      run_sweep.py        # L in {8..24}, full sweep
+      physics_audit.py    # 7 correctness checks
     tests/
-      test_stabilizer.py
-    data/               # simulation outputs (npz, txt)
-    figures/            # generated figures (pdf, png)
-    report/             # LaTeX source (RevTeX4-2 / PRL format)
-    requirements.txt
-  miet_research_report.pdf   # compiled report
+      test_stabilizer.py       # 30 tableau + circuit tests
+      test_reproducibility.py  # 7 seed/metadata tests
+    data/                 # .npz results, crossing table, FSS config
+    figures/              # generated PDF and PNG figures
+    report/               # LaTeX source (RevTeX4-2 / PRL)
+  docs/
+    reproduce_results.md  # full reproduction walkthrough
+  miet_research_report.pdf
 ```
 
 ## References
