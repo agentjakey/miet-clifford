@@ -495,6 +495,62 @@ interpretability research, motivated by this analogy.
 These analogies are speculative and are offered as motivation for future
 cross-disciplinary investigation, not as formal claims.
 
+\subsection{Limitations of the Finite-Size Analysis}
+\label{sec:limitations}
+
+The system sizes $L \in \{8, 12, 16, 20, 24\}$ are sufficient to exhibit the
+qualitative finite-size signatures of the MIPT---the crossover between
+volume-law and area-law entropy, the drift of adjacent-$L$ crossings, and
+an approximately logarithmic growth of $S$ near the critical window---but
+they are too small for reliable extraction of thermodynamic critical exponents.
+Precision MIPT studies reach $L \sim 512$~\cite{Zabalo2020}; at $L \leq 24$,
+the system has not entered the asymptotic scaling regime for any of the
+exponents considered here.
+
+The bootstrap uncertainties reported throughout---$\sigma(p_c^{\mathrm{eff}})
+\approx 0.008$, $\sigma(\nu_{\mathrm{eff}}) \approx 0.10$,
+$\sigma(\alpha_{\mathrm{eff}}) \approx 0.07$---quantify only the statistical
+precision of the estimators given the available finite-size data.
+They do not capture any of the systematic uncertainties that dominate the
+deviation from thermodynamic values: finite-size corrections to scaling
+(the leading source), sensitivity to the choice of gate ensemble, finite circuit
+depth relative to the correlation time, choice of scaling ansatz (simplified
+vs.\ full critical form), the fitting window over which collapse quality is
+evaluated, and the choice of observable (here, half-chain entropy at a fixed
+bipartition).
+These systematic contributions cannot be reduced by collecting more disorder
+realizations at the same system sizes.
+
+The FSS collapse of Fig.~\ref{fig:collapse} is diagnostic rather than
+quantitative.
+Because the critical entropy contains an additive logarithmic term
+[Eq.~(\ref{eq:logscale})], the simplified single-function ansatz of
+Eq.~(\ref{eq:fss}) is approximate near $p_c$; the fitted parameters absorb the
+missing logarithm into an effective $p_c^{\mathrm{eff}}$ and
+$\nu_{\mathrm{eff}}$ that systematically differ from thermodynamic values.
+The collapse demonstrates that the simulation reproduces the correct qualitative
+scaling structure; it does not constitute a precision measurement of the
+universality class exponents.
+
+The $\alpha_{\mathrm{eff}}$ fit is additionally underpowered.
+It is computed from five data points evaluated at the single grid value
+$p = 0.16$, which lies below the finite-size effective critical rate
+$p_c^{\mathrm{eff}} \approx 0.20$.
+A small shift in the evaluation point changes the fitted slope substantially,
+because the entropy at these sizes has not entered the asymptotic critical
+log-scaling regime.
+The resulting $\alpha_{\mathrm{eff}} = 0.270 \pm 0.074$ is a finite-size
+effective coefficient, not an estimate of the thermodynamic value
+$\alpha(p_c) \approx 1.6$.
+
+This project is best understood as a from-scratch numerical reproduction of the
+qualitative phenomenology of the MIPT: the crossover, the logarithmic signature,
+and the finite-size scaling structure are all visible and physically
+interpretable.
+The implementation is verified by seven independent physics checks and produces
+results consistent with the qualitative predictions of the field.
+It is not a precision numerical study.
+
 %% ────────────────────────────────────────────────────────────
 \section{Conclusion}
 \label{sec:conclusion}
