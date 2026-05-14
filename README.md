@@ -81,9 +81,10 @@ pip install -e ".[dev]"
 python -m pytest -v
 ```
 
-37 tests cover tableau initialization, gate conjugation (H, S, CNOT), Bell and
+53 tests cover tableau initialization, gate conjugation (H, S, CNOT), Bell and
 GHZ entanglement entropy, measurement collapse, symplectic pairing invariants,
-GF(2) rank, and circuit-level volume-law / area-law behavior. All 37 pass.
+GF(2) rank, circuit-level volume-law / area-law behavior, and Clifford sampler
+correctness (verified 24 unique single-qubit actions). All 53 pass.
 
 ## Reproducing results
 
