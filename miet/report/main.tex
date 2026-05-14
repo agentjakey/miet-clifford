@@ -144,12 +144,16 @@ For a stabilizer state of $n$ qubits with bipartition $A \cup B$
   S(A) = |A| - n + \mathrm{rank}_{\mathrm{GF}(2)}(M_B),
   \label{eq:entropy}
 \end{equation}
-where $M_B$ is the $n \times 2|B|$ submatrix of the stabilizer rows restricted
-to subsystem $B$'s $X$- and $Z$-columns.
+where $M_B$ is the $n \times 2|B|$ binary matrix formed by restricting the $n$
+stabilizer generators to the $X$- and $Z$-columns on subsystem $B$.
 The rank over $\mathrm{GF}(2)$---computed via Gaussian elimination with XOR
-arithmetic (see Appendix~\ref{app:gf2})---counts stabilizer generators
-with support entirely in $B$; generators that cross the $A|B$ boundary contribute
-to $S(A)$.
+arithmetic (see Appendix~\ref{app:gf2})---measures the dimension of the image
+of the stabilizer group under restriction to $B$: equivalently, it counts how
+many independent stabilizer constraints can be ``seen'' from $B$ alone.
+The difference $|A| - n + \mathrm{rank}(M_B)$ then equals the number of
+independent entangled Bell pairs across the $A|B$ cut, since each such pair
+contributes one unit of entropy and reduces the number of stabilizers
+fully visible from $B$.
 
 We verify Eq.~(\ref{eq:entropy}) against the Bell state $|\Phi^+\rangle$:
 stabilizers $\{X\otimes X,\, Z\otimes Z\}$ give
