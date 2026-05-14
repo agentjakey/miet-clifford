@@ -216,10 +216,13 @@ metadata JSON recording the master seed is written alongside every `.npz` file.
   dominant source of deviation from literature values is systematic finite-size
   bias, which is not reduced by collecting more disorder realizations.
 
-- **Gate ensemble:** Random two-qubit Cliffords are drawn from a decomposition
-  into six single-qubit Cliffords and two CNOTs. This produces scrambling
-  Clifford dynamics appropriate for MIPT physics but is not verified as an
-  exact uniform sampler over the 11,520-element two-qubit Clifford group.
+- **Gate ensemble:** Each single-qubit gate is sampled uniformly from the
+  verified 24-element single-qubit Clifford group (the list is programmatically
+  enumerated by Pauli action and confirmed to have 24 distinct elements at
+  import time). Two-qubit gates use the decomposition
+  `(1Q)·CNOT_01·(1Q)·CNOT_10·(1Q)·(1Q)` with six independent uniform 1Q
+  draws and two CNOTs. The full two-qubit ensemble is not verified as a
+  uniform sampler over the 11,520-element two-qubit Clifford group.
 
 ---
 

@@ -26,7 +26,10 @@ the qualitative phenomenology of the MIPT at system sizes $L \leq 24$.
   stabilizer submatrix restricted to one half of the chain. No floating-point
   linear algebra.
 - **Brickwork hybrid circuit** — alternating layers of random two-qubit Cliffords
-  and single-site measurements at rate $p$, with configurable warmup thermalization.
+  and single-site measurements at rate $p$. Single-qubit gates are sampled
+  uniformly from the verified 24-element group (programmatically enumerated by
+  Pauli action); the two-qubit ensemble is not verified uniform over all 11,520
+  elements. Configurable warmup thermalization.
 - **Disorder-averaged parameter sweep** — deterministic seeding via
   `numpy.SeedSequence`, checkpoint saving, and companion metadata JSON for
   full reproducibility.

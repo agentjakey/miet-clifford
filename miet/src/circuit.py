@@ -73,6 +73,7 @@ def apply_single_qubit_clifford(state: StabilizerState, qubit: int, gates: tuple
 
 
 def random_single_qubit_clifford(state: StabilizerState, qubit: int, rng=None):
+    # Uniform over the verified 24-element single-qubit Clifford group.
     idx = int(rng.integers(24) if rng is not None else np.random.randint(24))
     apply_single_qubit_clifford(state, qubit, SINGLE_QUBIT_CLIFFORDS[idx])
 
@@ -80,11 +81,17 @@ def random_single_qubit_clifford(state: StabilizerState, qubit: int, rng=None):
 def random_two_qubit_clifford(state: StabilizerState, q0: int, q1: int, rng=None):
     """Random 2-qubit Clifford via decomposition into 1Q Cliffords and CNOTs.
 
-    Uses the standard decomposition from the MIPT literature (Li et al. 2019).
-    Expected to produce scrambling Clifford dynamics; not verified as a uniform
-    sampler over the full 11520-element 2-qubit Clifford group.
+    Each 1Q gate is sampled uniformly from the verified 24-element single-qubit
+    Clifford group (SINGLE_QUBIT_CLIFFORDS is programmatically enumerated and
+    deduplicated by Pauli action at import time).
+
+    The full 2-qubit gate ensemble is not verified as a uniform sampler over
+    the 11520-element 2-qubit Clifford group; it is expected to produce
+    scrambling Clifford dynamics appropriate for the MIPT universality class.
     """
-    # TODO: Implement or verify exact uniform two-qubit Clifford sampling.
+    # TODO: Verify whether this decomposition is uniform over the full
+    # 11520-element 2-qubit Clifford group (requires group-theoretic analysis
+    # or exhaustive Haar-distance measurement).
     random_single_qubit_clifford(state, q0, rng)
     random_single_qubit_clifford(state, q1, rng)
     state.apply_cnot(q0, q1)

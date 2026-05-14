@@ -208,11 +208,15 @@ decomposition
 $\mathrm{C} = (\mathrm{1Q})\cdot\mathrm{CNOT}_{01}\cdot(\mathrm{1Q})\cdot
 \mathrm{CNOT}_{10}\cdot(\mathrm{1Q})\cdot(\mathrm{1Q})$,
 where each 1Q denotes an independent uniformly random element of the
-24-element single-qubit Clifford group.
+verified 24-element single-qubit Clifford group.
+The single-qubit Clifford list is generated programmatically by enumerating
+all $H/S$ sequences of length $\leq 6$, computing the Pauli-conjugation
+action of each via the stabilizer tableau, and deduplicating by action;
+an import-time assertion confirms exactly 24 distinct actions.
 This is the standard random entangling Clifford gate ensemble used in the
 MIPT literature~\cite{Li2019} and is expected to produce scrambling
 Clifford dynamics in the MIPT universality class.
-We do not claim this decomposition is an exactly uniform sampler over the
+The two-qubit gate ensemble is not verified as a uniform sampler over the
 full 11,520-element two-qubit Clifford group.
 
 \subsection{Simulation Protocol}
@@ -591,8 +595,9 @@ threshold, the replica-field-theory interpretation of the log-scaling exponent
 $\alpha$ (which is \textit{not} a CFT central charge), and speculative structural
 analogies with grokking and representation robustness in machine learning.
 
-Future directions include verifying or implementing exact uniform two-qubit
-Clifford sampling (currently unverified for the 11,520-element group),
+Future directions include verifying whether the two-qubit gate decomposition
+is an exact uniform sampler over the 11,520-element two-qubit Clifford group
+(single-qubit uniformity is now verified; two-qubit uniformity is not),
 extending to two-qubit measurements and non-Clifford gates (requiring tensor
 network methods), implementing OTOC diagnostics to directly measure scrambling,
 studying the transition in open systems with non-Markovian noise, and making

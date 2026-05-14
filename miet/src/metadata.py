@@ -37,10 +37,12 @@ def collect_metadata(L_values, p_values, n_samples,
         'total_circuit_depth_rule':           'warmup_layers + main_layers per realization',
         'measurements_applied_during_warmup': measurements_during_warmup,
         'gate_ensemble': (
-            '6 independent uniform draws from the 24-element single-qubit Clifford group '
-            '+ 2 CNOT gates per 2-qubit gate; '
-            'not verified as a uniform sampler over the full '
-            '11520-element 2-qubit Clifford group'
+            '1Q gates: uniform over the verified 24-element single-qubit Clifford group '
+            '(programmatically enumerated and deduplicated by Pauli action); '
+            '2Q gates: decomposition (1Q)·CNOT_01·(1Q)·CNOT_10·(1Q)·(1Q) with 6 '
+            'independent uniform 1Q draws + 2 CNOTs; '
+            'the full 2-qubit ensemble is not verified as a uniform sampler over '
+            'the 11520-element 2-qubit Clifford group'
         ),
         'random_seed':    seed,
         'datetime_utc':   _dt.datetime.now(_dt.timezone.utc).isoformat(),
