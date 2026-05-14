@@ -59,20 +59,6 @@
   {https://doi.org/10.1103/PhysRevB.100.134306} {\bibfield  {journal} {\bibinfo
    {journal} {Phys. Rev. B}\ }\textbf {\bibinfo {volume} {100}},\ \bibinfo
   {pages} {134306} (\bibinfo {year} {2019})}\BibitemShut {NoStop}%
-\bibitem [{\citenamefont {Zabalo}\ \emph {et~al.}(2020)\citenamefont {Zabalo},
-  \citenamefont {Gullans}, \citenamefont {Wilson}, \citenamefont
-  {Gopalakrishnan}, \citenamefont {Huse},\ and\ \citenamefont
-  {Pixley}}]{Zabalo2020}%
-  \BibitemOpen
-  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {A.}~\bibnamefont
-  {Zabalo}}, \bibinfo {author} {\bibfnamefont {M.~J.}\ \bibnamefont {Gullans}},
-  \bibinfo {author} {\bibfnamefont {J.~H.}\ \bibnamefont {Wilson}}, \bibinfo
-  {author} {\bibfnamefont {S.}~\bibnamefont {Gopalakrishnan}}, \bibinfo
-  {author} {\bibfnamefont {D.~A.}\ \bibnamefont {Huse}},\ and\ \bibinfo
-  {author} {\bibfnamefont {J.~H.}\ \bibnamefont {Pixley}},\ }\href
-  {https://doi.org/10.1103/PhysRevB.101.060301} {\bibfield  {journal} {\bibinfo
-   {journal} {Phys. Rev. B}\ }\textbf {\bibinfo {volume} {101}},\ \bibinfo
-  {pages} {060301} (\bibinfo {year} {2020})}\BibitemShut {NoStop}%
 \bibitem [{\citenamefont {Li}\ \emph {et~al.}(2018)\citenamefont {Li},
   \citenamefont {Chen},\ and\ \citenamefont {Fisher}}]{Li2018}%
   \BibitemOpen
@@ -127,6 +113,20 @@
   {https://doi.org/10.1103/PhysRevB.101.104302} {\bibfield  {journal} {\bibinfo
    {journal} {Phys. Rev. B}\ }\textbf {\bibinfo {volume} {101}},\ \bibinfo
   {pages} {104302} (\bibinfo {year} {2020})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Zabalo}\ \emph {et~al.}(2020)\citenamefont {Zabalo},
+  \citenamefont {Gullans}, \citenamefont {Wilson}, \citenamefont
+  {Gopalakrishnan}, \citenamefont {Huse},\ and\ \citenamefont
+  {Pixley}}]{Zabalo2020}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {A.}~\bibnamefont
+  {Zabalo}}, \bibinfo {author} {\bibfnamefont {M.~J.}\ \bibnamefont {Gullans}},
+  \bibinfo {author} {\bibfnamefont {J.~H.}\ \bibnamefont {Wilson}}, \bibinfo
+  {author} {\bibfnamefont {S.}~\bibnamefont {Gopalakrishnan}}, \bibinfo
+  {author} {\bibfnamefont {D.~A.}\ \bibnamefont {Huse}},\ and\ \bibinfo
+  {author} {\bibfnamefont {J.~H.}\ \bibnamefont {Pixley}},\ }\href
+  {https://doi.org/10.1103/PhysRevB.101.060301} {\bibfield  {journal} {\bibinfo
+   {journal} {Phys. Rev. B}\ }\textbf {\bibinfo {volume} {101}},\ \bibinfo
+  {pages} {060301} (\bibinfo {year} {2020})}\BibitemShut {NoStop}%
 \bibitem [{\citenamefont {Bao}\ \emph {et~al.}(2020)\citenamefont {Bao},
   \citenamefont {Choi},\ and\ \citenamefont {Altman}}]{Bao2020}%
   \BibitemOpen

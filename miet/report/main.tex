@@ -22,31 +22,24 @@
 
 %% ────────────────────────────────────────────────────────────
 \begin{abstract}
-We study measurement-induced phase transitions (MIPTs) in one-dimensional random
-Clifford circuits using the Aaronson-Gottesman stabilizer tableau formalism.
-Simulating system sizes $L \in \{8,12,16,20,24\}$ with 200 disorder realizations
-per parameter point, we map the entanglement structure as a function of single-site
-measurement rate $p \in [0, 0.5]$.
-We resolve the qualitative finite-size signature of the entanglement phase
-transition, identifying a crossover between volume-law ($S \propto L$) and
-area-law ($S = O(1)$) phases.
-The finite-size effective critical rate is
-$p_c^{\mathrm{eff}} \approx 0.20 \pm 0.017$ (bootstrap statistical
-uncertainty only; systematic finite-size bias is the dominant source of
-deviation from the thermodynamic value $p_c \approx 0.16$~\cite{Li2019}).
-The data show weak logarithmic growth of $S(L/2)$ with system size at $p = 0.16$;
-the fitted coefficient $\alpha_{\mathrm{eff}} = 0.27 \pm 0.07$ is not
-quantitatively consistent with the asymptotic literature value $\alpha \approx 1.6$,
-reflecting strong finite-size and off-critical suppression at $L \leq 24$.
-A finite-size scaling collapse yields effective exponent
-$\nu_{\mathrm{eff}} = 1.72 \pm 0.10$ (statistical only),
-substantially above the thermodynamic value $\nu \approx 1.28$~\cite{Zabalo2020}
-due to finite-size corrections; $L \leq 24$ is too small for reliable
-thermodynamic exponent extraction.
-The results reproduce qualitative MIPT phenomenology and serve as a proof of
-concept for the stabilizer simulator.
-We discuss connections to quantum error correction thresholds and speculative
-structural analogies with threshold phenomena in machine-learning systems.
+We study finite-size signatures of measurement-induced entanglement transitions
+in one-dimensional random Clifford circuits using an Aaronson-Gottesman
+stabilizer tableau simulator implemented from scratch.
+For $L \in \{8,12,16,20,24\}$, 200 disorder realizations per parameter point,
+and single-site measurement rates $p \in [0, 0.5]$, we observe the expected
+crossover from volume-law entanglement at low measurement rate to area-law
+entanglement at high measurement rate.
+Adjacent-size crossings and finite-size scaling fits give effective critical
+rates $p_c^{\mathrm{eff}} \approx 0.20$, above the thermodynamic literature
+value $p_c \approx 0.16$~\cite{Li2019}, consistent with strong finite-size
+and model-dependent effects at these small sizes.
+A log-scaling fit near the literature critical point gives a finite-size
+coefficient $\alpha_{\mathrm{eff}} \approx 0.27$, which shows the expected
+logarithmic form but does not quantitatively reproduce the asymptotic
+literature value~\cite{Li2019}.
+Overall, the project reproduces the qualitative phenomenology of the MIPT
+while highlighting the limitations of extracting universal exponents from
+$L \leq 24$ data.
 \end{abstract}
 
 \maketitle
