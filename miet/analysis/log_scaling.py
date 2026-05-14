@@ -22,7 +22,9 @@ References:
   Li, Chen, Fisher, PRB 100, 134306 (2019)
   Jian, You, Vasseur, Ludwig, PRB 101, 104302 (2020)
 """
+
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -30,28 +32,34 @@ import numpy as np
 from scipy.stats import linregress
 import os, sys
 
-mpl.rcParams.update({
-    'font.size':        12,
-    'axes.labelsize':   13,
-    'axes.titlesize':   13,
-    'xtick.labelsize':  11,
-    'ytick.labelsize':  11,
-    'legend.fontsize':  11,
-    'figure.dpi':       300,
-})
+mpl.rcParams.update(
+    {
+        "font.size": 12,
+        "axes.labelsize": 13,
+        "axes.titlesize": 13,
+        "xtick.labelsize": 11,
+        "ytick.labelsize": 11,
+        "legend.fontsize": 11,
+        "figure.dpi": 300,
+    }
+)
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from src.simulation import load_results
 
-SWEEP_PATH  = os.path.join(os.path.dirname(__file__), "../data/sweep_results.npz")
-QUICK_PATH  = os.path.join(os.path.dirname(__file__), "../data/quick_results.npz")
-OUT_PDF     = os.path.join(os.path.dirname(__file__), "../figures/fig2_log_scaling.pdf")
-OUT_PNG     = os.path.join(os.path.dirname(__file__), "../figures/fig2_log_scaling.png")
-OUT_SUPP_PDF = os.path.join(os.path.dirname(__file__), "../figures/fig2b_alpha_vs_p.pdf")
-OUT_SUPP_PNG = os.path.join(os.path.dirname(__file__), "../figures/fig2b_alpha_vs_p.png")
-OUT_TABLE   = os.path.join(os.path.dirname(__file__), "../data/alpha_vs_p.txt")
+SWEEP_PATH = os.path.join(os.path.dirname(__file__), "../data/sweep_results.npz")
+QUICK_PATH = os.path.join(os.path.dirname(__file__), "../data/quick_results.npz")
+OUT_PDF = os.path.join(os.path.dirname(__file__), "../figures/fig2_log_scaling.pdf")
+OUT_PNG = os.path.join(os.path.dirname(__file__), "../figures/fig2_log_scaling.png")
+OUT_SUPP_PDF = os.path.join(
+    os.path.dirname(__file__), "../figures/fig2b_alpha_vs_p.pdf"
+)
+OUT_SUPP_PNG = os.path.join(
+    os.path.dirname(__file__), "../figures/fig2b_alpha_vs_p.png"
+)
+OUT_TABLE = os.path.join(os.path.dirname(__file__), "../data/alpha_vs_p.txt")
 
-LINESTYLES  = ["-", "--", "-.", ":", (0, (3, 1, 1, 1, 1, 1))]
+LINESTYLES = ["-", "--", "-.", ":", (0, (3, 1, 1, 1, 1, 1))]
 
 # Warn if alpha_eff changes by more than this across nearby p values.
 _WARN_ALPHA_RANGE = 0.5
@@ -82,33 +90,36 @@ def _fit_alpha_at_p(p_target, p_vals, L_vals, mean_S, sem_S):
     Returns dict with keys: p_used, alpha_eff, alpha_err, r2, intercept,
     L_values_used.
     """
-    p_idx  = int(np.argmin(np.abs(p_vals - p_target)))
+    p_idx = int(np.argmin(np.abs(p_vals - p_target)))
     p_used = float(p_vals[p_idx])
-    x      = np.array([np.log(L / 2.0) for L in L_vals])
-    y      = mean_S[:, p_idx]
+    x = np.array([np.log(L / 2.0) for L in L_vals])
+    y = mean_S[:, p_idx]
 
     fit = linregress(x, y)
-    alpha     = float(fit.slope)
+    alpha = float(fit.slope)
     intercept = float(fit.intercept)
-    r2        = float(fit.rvalue ** 2)
-    n         = len(L_vals)
-    alpha_err = (float(fit.stderr)
-                 if (fit.stderr is not None and np.isfinite(fit.stderr) and n > 2)
-                 else float('nan'))
+    r2 = float(fit.rvalue**2)
+    n = len(L_vals)
+    alpha_err = (
+        float(fit.stderr)
+        if (fit.stderr is not None and np.isfinite(fit.stderr) and n > 2)
+        else float("nan")
+    )
 
     return {
-        'p_used':       p_used,
-        'alpha_eff':    alpha,
-        'alpha_err':    alpha_err,
-        'r2':           r2,
-        'intercept':    intercept,
-        'n_sizes':      n,
-        'L_values':     list(L_vals),
+        "p_used": p_used,
+        "alpha_eff": alpha,
+        "alpha_err": alpha_err,
+        "r2": r2,
+        "intercept": intercept,
+        "n_sizes": n,
+        "L_values": list(L_vals),
     }
 
 
-def _build_alpha_table(p_vals, L_vals, mean_S, sem_S,
-                       pc_lit=0.16, pc_cross=None, pc_fss=None):
+def _build_alpha_table(
+    p_vals, L_vals, mean_S, sem_S, pc_lit=0.16, pc_cross=None, pc_fss=None
+):
     """Compute alpha_eff at multiple p values spanning the critical region.
 
     Evaluation points:
@@ -119,7 +130,7 @@ def _build_alpha_table(p_vals, L_vals, mean_S, sem_S,
     """
     # Dense scan: p in [0.10, 0.30]
     scan_mask = (p_vals >= 0.10) & (p_vals <= 0.30)
-    scan_ps   = p_vals[scan_mask]
+    scan_ps = p_vals[scan_mask]
 
     # Named evaluation points (deduplicated against scan grid)
     named_ps = [pc_lit]
@@ -134,13 +145,13 @@ def _build_alpha_table(p_vals, L_vals, mean_S, sem_S,
     seen = set()
     for pt in all_p_targets:
         r = _fit_alpha_at_p(pt, p_vals, L_vals, mean_S, sem_S)
-        key = round(r['p_used'], 6)
+        key = round(r["p_used"], 6)
         if key in seen:
             continue
         seen.add(key)
         rows.append(r)
 
-    rows.sort(key=lambda r: r['p_used'])
+    rows.sort(key=lambda r: r["p_used"])
     return rows
 
 
@@ -151,19 +162,23 @@ def _format_alpha_table(rows):
     lines.append("Sizes used: all available L values (see L_values column)")
     lines.append("alpha_err is OLS stderr; meaningful only for n_sizes >= 3")
     lines.append("=" * 80)
-    lines.append(f"{'p_used':>8}  {'alpha_eff':>10}  {'alpha_err':>10}  "
-                 f"{'R^2':>6}  {'intercept':>10}  {'n_sizes':>7}")
+    lines.append(
+        f"{'p_used':>8}  {'alpha_eff':>10}  {'alpha_err':>10}  "
+        f"{'R^2':>6}  {'intercept':>10}  {'n_sizes':>7}"
+    )
     lines.append("-" * 80)
     for r in rows:
-        ae = f"{r['alpha_err']:.4f}" if np.isfinite(r['alpha_err']) else "  n/a  "
-        lines.append(f"{r['p_used']:8.4f}  {r['alpha_eff']:10.4f}  {ae:>10}  "
-                     f"{r['r2']:6.4f}  {r['intercept']:10.4f}  {r['n_sizes']:7d}")
+        ae = f"{r['alpha_err']:.4f}" if np.isfinite(r["alpha_err"]) else "  n/a  "
+        lines.append(
+            f"{r['p_used']:8.4f}  {r['alpha_eff']:10.4f}  {ae:>10}  "
+            f"{r['r2']:6.4f}  {r['intercept']:10.4f}  {r['n_sizes']:7d}"
+        )
     lines.append("=" * 80)
     return "\n".join(lines)
 
 
 def _sensitivity_warning(rows):
-    alphas = [r['alpha_eff'] for r in rows if np.isfinite(r['alpha_eff'])]
+    alphas = [r["alpha_eff"] for r in rows if np.isfinite(r["alpha_eff"])]
     if not alphas:
         return False
     return (max(alphas) - min(alphas)) > _WARN_ALPHA_RANGE
@@ -177,14 +192,15 @@ def main():
     # Try to read FSS estimates from saved config (if available)
     # ------------------------------------------------------------------ #
     cfg_path = os.path.join(os.path.dirname(__file__), "../data/fss_config.json")
-    pc_fss    = None
-    pc_cross  = None
+    pc_fss = None
+    pc_cross = None
     if os.path.exists(cfg_path):
         try:
             import json
+
             with open(cfg_path) as f:
                 cfg = json.load(f)
-            pc_fss = cfg.get('pc_eff')
+            pc_fss = cfg.get("pc_eff")
             print(f"Read pc_eff = {pc_fss:.4f} from {cfg_path}")
         except Exception:
             pass
@@ -195,8 +211,8 @@ def main():
         try:
             with open(cross_path) as f:
                 for line in f:
-                    if 'mean crossing' in line.lower():
-                        pc_cross = float(line.split('=')[-1].strip().split()[0])
+                    if "mean crossing" in line.lower():
+                        pc_cross = float(line.split("=")[-1].strip().split()[0])
                         print(f"Read pc_cross = {pc_cross:.4f} from {cross_path}")
                         break
         except Exception:
@@ -206,13 +222,15 @@ def main():
     # Fit at primary point (p=0.16) for the main figure
     # ------------------------------------------------------------------ #
     primary = _fit_alpha_at_p(0.16, p_vals, L_vals, mean_S, sem_S)
-    alpha     = primary['alpha_eff']
-    alpha_err = primary['alpha_err']
-    p_crit    = primary['p_used']
-    intercept = primary['intercept']
+    alpha = primary["alpha_eff"]
+    alpha_err = primary["alpha_err"]
+    p_crit = primary["p_used"]
+    intercept = primary["intercept"]
     print(f"\nPrimary fit at p = {p_crit:.4f}:")
-    print(f"  alpha_eff = {alpha:.4f}"
-          + (f" +/- {alpha_err:.4f}" if np.isfinite(alpha_err) else "  (n<=2)"))
+    print(
+        f"  alpha_eff = {alpha:.4f}"
+        + (f" +/- {alpha_err:.4f}" if np.isfinite(alpha_err) else "  (n<=2)")
+    )
     print(f"  R^2       = {primary['r2']:.4f}")
     print(f"  NOTE: alpha_eff << 1.6 is expected at L<=24 (see module docstring)")
 
@@ -220,48 +238,68 @@ def main():
     # Build multi-p alpha table
     # ------------------------------------------------------------------ #
     print("\nComputing alpha_eff at multiple p values ...")
-    table_rows = _build_alpha_table(p_vals, L_vals, mean_S, sem_S,
-                                    pc_lit=0.16,
-                                    pc_cross=pc_cross,
-                                    pc_fss=pc_fss)
+    table_rows = _build_alpha_table(
+        p_vals, L_vals, mean_S, sem_S, pc_lit=0.16, pc_cross=pc_cross, pc_fss=pc_fss
+    )
 
     table_str = _format_alpha_table(table_rows)
     print(table_str)
 
     if _sensitivity_warning(table_rows):
-        print("\nWARNING: alpha_eff is highly sensitive to the chosen p value. "
-              "The fit is underpowered and should not be interpreted as a "
-              "measurement of the thermodynamic exponent alpha(p_c).")
+        print(
+            "\nWARNING: alpha_eff is highly sensitive to the chosen p value. "
+            "The fit is underpowered and should not be interpreted as a "
+            "measurement of the thermodynamic exponent alpha(p_c)."
+        )
 
     os.makedirs(os.path.dirname(OUT_TABLE), exist_ok=True)
-    with open(OUT_TABLE, 'w') as f:
+    with open(OUT_TABLE, "w") as f:
         f.write(table_str + "\n")
     print(f"\nSaved alpha table: {OUT_TABLE}")
 
     # ------------------------------------------------------------------ #
     # Main figure (two panels)
     # ------------------------------------------------------------------ #
-    cmap   = matplotlib.colormaps.get_cmap("plasma").resampled(n_L + 2)
+    cmap = matplotlib.colormaps.get_cmap("plasma").resampled(n_L + 2)
     colors = [cmap(n_L + 1 - i) for i in range(n_L)]
 
     fig, (ax_left, ax_right) = plt.subplots(1, 2, figsize=(10, 4.5))
 
     # LEFT: S vs p
     for i, L in enumerate(L_vals):
-        c  = colors[i]
+        c = colors[i]
         ls = LINESTYLES[i % len(LINESTYLES)]
-        ax_left.plot(p_vals, mean_S[i], color=c, linewidth=2, linestyle=ls,
-                     label=f"$L={L}$", zorder=3)
-        ax_left.fill_between(p_vals,
-                             mean_S[i] - sem_S[i],
-                             mean_S[i] + sem_S[i],
-                             color=c, alpha=0.25, zorder=2)
+        ax_left.plot(
+            p_vals,
+            mean_S[i],
+            color=c,
+            linewidth=2,
+            linestyle=ls,
+            label=f"$L={L}$",
+            zorder=3,
+        )
+        ax_left.fill_between(
+            p_vals,
+            mean_S[i] - sem_S[i],
+            mean_S[i] + sem_S[i],
+            color=c,
+            alpha=0.25,
+            zorder=2,
+        )
 
-    ax_left.axvspan(0.13, 0.19, color="lightyellow", alpha=0.6, zorder=1,
-                    label="Critical region")
-    ax_left.text(0.155, float(np.nanmax(mean_S)) * 0.88, "Critical\nregion",
-                 ha="center", va="top", fontsize=10, color="goldenrod",
-                 fontweight="bold")
+    ax_left.axvspan(
+        0.13, 0.19, color="lightyellow", alpha=0.6, zorder=1, label="Critical region"
+    )
+    ax_left.text(
+        0.155,
+        float(np.nanmax(mean_S)) * 0.88,
+        "Critical\nregion",
+        ha="center",
+        va="top",
+        fontsize=10,
+        color="goldenrod",
+        fontweight="bold",
+    )
     ax_left.axvline(p_crit, color="dimgray", linestyle=":", linewidth=1.2)
     ax_left.set_xlabel(r"Measurement rate  $p$")
     ax_left.set_ylabel(r"$S(L/2)$  [ebits]")
@@ -280,17 +318,36 @@ def main():
     x_fit = np.linspace(x_log.min() - 0.1, x_log.max() + 0.1, 200)
     y_fit = alpha * x_fit + intercept
 
-    ax_right.errorbar(x_log, y_vals, yerr=y_errs,
-                      fmt="o", color="navy", markersize=8, capsize=4,
-                      linewidth=2.0, zorder=4, label="Data")
-    ax_right.plot(x_fit, y_fit, "r--", linewidth=2.0,
-                  label=r"Fit: $S = \alpha_{\mathrm{eff}}\,\ln(L/2) + c$",
-                  zorder=3)
+    ax_right.errorbar(
+        x_log,
+        y_vals,
+        yerr=y_errs,
+        fmt="o",
+        color="navy",
+        markersize=8,
+        capsize=4,
+        linewidth=2.0,
+        zorder=4,
+        label="Data",
+    )
+    ax_right.plot(
+        x_fit,
+        y_fit,
+        "r--",
+        linewidth=2.0,
+        label=r"Fit: $S = \alpha_{\mathrm{eff}}\,\ln(L/2) + c$",
+        zorder=3,
+    )
 
     for i, L in enumerate(L_vals):
-        ax_right.annotate(f"$L={L}$", (x_log[i], y_vals[i]),
-                          textcoords="offset points", xytext=(6, 3),
-                          fontsize=10, color="navy")
+        ax_right.annotate(
+            f"$L={L}$",
+            (x_log[i], y_vals[i]),
+            textcoords="offset points",
+            xytext=(6, 3),
+            fontsize=10,
+            color="navy",
+        )
 
     if np.isfinite(alpha_err):
         ann_text = (
@@ -302,28 +359,41 @@ def main():
     else:
         ann_text = (
             f"$\\alpha_{{\\mathrm{{eff}}}} = {alpha:.3f}$"
-            + (f"  ($n={n_L}$ pts)" if n_L <= 2 else "") + "\n"
+            + (f"  ($n={n_L}$ pts)" if n_L <= 2 else "")
+            + "\n"
             f"Li et al. (2019): $\\alpha \\approx 1.6$"
         )
 
-    ax_right.text(0.05, 0.97, ann_text,
-                  transform=ax_right.transAxes,
-                  fontsize=10, va="top",
-                  bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.5))
+    ax_right.text(
+        0.05,
+        0.97,
+        ann_text,
+        transform=ax_right.transAxes,
+        fontsize=10,
+        va="top",
+        bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.5),
+    )
 
-    ax_right.text(0.05, 0.52,
-                  r"$\alpha_{\mathrm{eff}}$ is a small-system" + "\n"
-                  r"fit coefficient, not a thermodynamic" + "\n"
-                  r"exponent.  Not a CFT central charge." + "\n"
-                  "See Jian et al. (2020).",
-                  transform=ax_right.transAxes,
-                  fontsize=9, va="top", style="italic", color="#444444")
+    ax_right.text(
+        0.05,
+        0.52,
+        r"$\alpha_{\mathrm{eff}}$ is a small-system" + "\n"
+        r"fit coefficient, not a thermodynamic" + "\n"
+        r"exponent.  Not a CFT central charge." + "\n"
+        "See Jian et al. (2020).",
+        transform=ax_right.transAxes,
+        fontsize=9,
+        va="top",
+        style="italic",
+        color="#444444",
+    )
 
     ax_right.set_xlabel(r"$\ln(L/2)$")
     ax_right.set_ylabel(r"$S(L/2)$  [ebits]")
     ax_right.set_title(
         f"Log Scaling at $p = {p_crit:.3f}$  "
-        f"($\\alpha_{{\\mathrm{{eff}}}}={alpha:.3f}$)")
+        f"($\\alpha_{{\\mathrm{{eff}}}}={alpha:.3f}$)"
+    )
     ax_right.legend(loc="lower right")
     ax_right.grid(True, linestyle="--", color="lightgray", alpha=0.3)
 
@@ -337,37 +407,71 @@ def main():
     # ------------------------------------------------------------------ #
     # Supplemental figure: alpha_eff vs p
     # ------------------------------------------------------------------ #
-    scan_ps    = np.array([r['p_used']     for r in table_rows])
-    scan_alpha = np.array([r['alpha_eff']  for r in table_rows])
-    scan_err   = np.array([r['alpha_err']  for r in table_rows])
+    scan_ps = np.array([r["p_used"] for r in table_rows])
+    scan_alpha = np.array([r["alpha_eff"] for r in table_rows])
+    scan_err = np.array([r["alpha_err"] for r in table_rows])
 
     fig2, ax_s = plt.subplots(figsize=(6, 4))
     has_err = np.isfinite(scan_err)
     if has_err.any():
-        ax_s.errorbar(scan_ps[has_err], scan_alpha[has_err], yerr=scan_err[has_err],
-                      fmt="o-", color="steelblue", markersize=5, capsize=3,
-                      linewidth=1.5, label=r"$\alpha_{\mathrm{eff}}(p)$")
+        ax_s.errorbar(
+            scan_ps[has_err],
+            scan_alpha[has_err],
+            yerr=scan_err[has_err],
+            fmt="o-",
+            color="steelblue",
+            markersize=5,
+            capsize=3,
+            linewidth=1.5,
+            label=r"$\alpha_{\mathrm{eff}}(p)$",
+        )
     if (~has_err).any():
-        ax_s.plot(scan_ps[~has_err], scan_alpha[~has_err], "o",
-                  color="steelblue", markersize=5)
+        ax_s.plot(
+            scan_ps[~has_err],
+            scan_alpha[~has_err],
+            "o",
+            color="steelblue",
+            markersize=5,
+        )
 
-    ax_s.axhline(1.6, color="tomato", linestyle="--", linewidth=1.5,
-                 label=r"Li et al. $\alpha \approx 1.6$ ($L\gg 100$)")
-    ax_s.axvline(0.16, color="gray", linestyle=":", linewidth=1.2,
-                 label=r"$p_c^{\mathrm{lit}} = 0.16$")
+    ax_s.axhline(
+        1.6,
+        color="tomato",
+        linestyle="--",
+        linewidth=1.5,
+        label=r"Li et al. $\alpha \approx 1.6$ ($L\gg 100$)",
+    )
+    ax_s.axvline(
+        0.16,
+        color="gray",
+        linestyle=":",
+        linewidth=1.2,
+        label=r"$p_c^{\mathrm{lit}} = 0.16$",
+    )
 
     if pc_cross is not None:
-        ax_s.axvline(pc_cross, color="darkorange", linestyle="-.", linewidth=1.0,
-                     label=f"$p_c^{{\\mathrm{{cross}}}} = {pc_cross:.3f}$")
+        ax_s.axvline(
+            pc_cross,
+            color="darkorange",
+            linestyle="-.",
+            linewidth=1.0,
+            label=f"$p_c^{{\\mathrm{{cross}}}} = {pc_cross:.3f}$",
+        )
     if pc_fss is not None:
-        ax_s.axvline(pc_fss, color="purple", linestyle="-.", linewidth=1.0,
-                     label=f"$p_c^{{\\mathrm{{FSS}}}} = {pc_fss:.3f}$")
+        ax_s.axvline(
+            pc_fss,
+            color="purple",
+            linestyle="-.",
+            linewidth=1.0,
+            label=f"$p_c^{{\\mathrm{{FSS}}}} = {pc_fss:.3f}$",
+        )
 
     ax_s.set_xlabel(r"Measurement rate $p$")
     ax_s.set_ylabel(r"$\alpha_{\mathrm{eff}}(p)$")
     ax_s.set_title(
         r"$\alpha_{\mathrm{eff}}$ sensitivity to evaluation $p$  "
-        f"(L $\\leq$ {max(L_vals)})")
+        f"(L $\\leq$ {max(L_vals)})"
+    )
     ax_s.legend(loc="upper right", fontsize=9)
     ax_s.grid(True, linestyle="--", color="lightgray", alpha=0.3)
 
@@ -381,8 +485,10 @@ def main():
     # Summary
     # ------------------------------------------------------------------ #
     print(f"\n--- alpha_eff summary (primary fit at p = {p_crit:.4f}) ---")
-    print(f"  alpha_eff  = {alpha:.4f}"
-          + (f" +/- {alpha_err:.4f}" if np.isfinite(alpha_err) else "  (n<=2)"))
+    print(
+        f"  alpha_eff  = {alpha:.4f}"
+        + (f" +/- {alpha_err:.4f}" if np.isfinite(alpha_err) else "  (n<=2)")
+    )
     print(f"  R^2        = {primary['r2']:.4f}")
     print(f"  Lit. value = ~1.6  (Li 2019, L >> 100)")
     print(f"  The fit uses {n_L} system sizes; it is underpowered and p-sensitive.")

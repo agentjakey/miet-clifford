@@ -1,6 +1,7 @@
 """
 Random Clifford circuit primitives and brickwork hybrid circuit for MIPT simulations.
 """
+
 import numpy as np
 from itertools import product as _iproduct
 from .stabilizer import StabilizerState
@@ -20,19 +21,20 @@ def _pauli_action(gates):
     Used at import time to verify that SINGLE_QUBIT_CLIFFORDS covers all
     24 distinct single-qubit Clifford actions without duplicates.
     """
+
     def _apply_and_read(prep_h):
         s = StabilizerState(1)
         if prep_h:
-            s.apply_h(0)   # stabilizer: Z -> X
+            s.apply_h(0)  # stabilizer: Z -> X
         for g in gates:
-            if g == 'H':
+            if g == "H":
                 s.apply_h(0)
             else:
                 s.apply_s(0)
-        row = s.tab[1]     # stabilizer row (row index n=1 for a 1-qubit state)
+        row = s.tab[1]  # stabilizer row (row index n=1 for a 1-qubit state)
         return (int(row[2]), int(row[0]), int(row[1]))  # (phase, x_bit, z_bit)
 
-    return (_apply_and_read(True), _apply_and_read(False))   # (C X C†, C Z C†)
+    return (_apply_and_read(True), _apply_and_read(False))  # (C X C†, C Z C†)
 
 
 def _build_single_qubit_cliffords():
@@ -48,15 +50,15 @@ def _build_single_qubit_cliffords():
     """
     seen = {}
     for length in range(7):
-        for seq in _iproduct(('H', 'S'), repeat=length):
+        for seq in _iproduct(("H", "S"), repeat=length):
             sig = _pauli_action(seq)
             if sig not in seen:
                 seen[sig] = seq
 
     result = list(seen.values())
-    assert len(result) == 24, (
-        f"Expected 24 unique single-qubit Clifford actions, found {len(result)}"
-    )
+    assert (
+        len(result) == 24
+    ), f"Expected 24 unique single-qubit Clifford actions, found {len(result)}"
     return result
 
 
@@ -66,7 +68,7 @@ assert len(SINGLE_QUBIT_CLIFFORDS) == 24
 
 def apply_single_qubit_clifford(state: StabilizerState, qubit: int, gates: tuple):
     for g in gates:
-        if g == 'H':
+        if g == "H":
             state.apply_h(qubit)
         else:
             state.apply_s(qubit)
@@ -129,8 +131,9 @@ def measurement_layer(state: StabilizerState, p: float, rng=None):
             state.measure(i, rng)
 
 
-def run_circuit(n_qubits: int, p_meas: float, n_steps: int,
-                warmup: int = None, rng=None) -> StabilizerState:
+def run_circuit(
+    n_qubits: int, p_meas: float, n_steps: int, warmup: int = None, rng=None
+) -> StabilizerState:
     """Run hybrid random Clifford + measurement circuit to steady state.
 
     Warmup uses the same p_meas rate as the main run -- essential for reaching

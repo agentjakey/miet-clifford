@@ -10,6 +10,7 @@ Reference: A. Hamma, R. Ionicioiu, P. Zanardi,
     "Bipartite entanglement and entropic boundary law in lattice spin systems,"
     Phys. Rev. A 71, 022315 (2005). doi:10.1103/PhysRevA.71.022315
 """
+
 import numpy as np
 from .stabilizer import StabilizerState
 
@@ -57,7 +58,7 @@ def entanglement_entropy(state: StabilizerState, subsystem_A: list) -> float:
     if not B:
         return 0.0
 
-    stab = state.tab[n:, :2*n]          # stabilizer rows, no phase column
+    stab = state.tab[n:, : 2 * n]  # stabilizer rows, no phase column
     B_cols = [j for j in B] + [j + n for j in B]
     M_B = stab[:, B_cols]
     return float(len(subsystem_A) - n + _gf2_rank(M_B))

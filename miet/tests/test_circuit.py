@@ -5,6 +5,7 @@ Verifies that SINGLE_QUBIT_CLIFFORDS contains exactly 24 entries with
 24 distinct Pauli-conjugation actions and that every entry maps Pauli
 operators to Pauli operators with correct signs.
 """
+
 import sys
 import os
 import numpy as np
@@ -19,25 +20,25 @@ from src.circuit import (
 )
 from src.stabilizer import StabilizerState
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
-_VALID_PAULIS = {(1, 0), (0, 1), (1, 1)}   # X, Z, Y  (x_bit, z_bit)
+_VALID_PAULIS = {(1, 0), (0, 1), (1, 1)}  # X, Z, Y  (x_bit, z_bit)
 
 
 def _decode(triple):
     """Return a human-readable string for a (phase, x_bit, z_bit) triple."""
     phase, x, z = triple
-    name = {(1, 0): 'X', (0, 1): 'Z', (1, 1): 'Y'}[(x, z)]
-    sign = '+' if phase == 0 else '-'
+    name = {(1, 0): "X", (0, 1): "Z", (1, 1): "Y"}[(x, z)]
+    sign = "+" if phase == 0 else "-"
     return sign + name
 
 
 # ---------------------------------------------------------------------------
 # Count and uniqueness
 # ---------------------------------------------------------------------------
+
 
 def test_count_is_24():
     assert len(SINGLE_QUBIT_CLIFFORDS) == 24
@@ -52,22 +53,21 @@ def test_all_actions_unique():
         for j in range(i + 1, len(sigs))
         if sigs[i] == sigs[j]
     ]
-    assert len(unique) == 24, (
-        f"Only {len(unique)} unique Pauli actions -- duplicates: {duplicates}"
-    )
+    assert (
+        len(unique) == 24
+    ), f"Only {len(unique)} unique Pauli actions -- duplicates: {duplicates}"
 
 
 # ---------------------------------------------------------------------------
 # Pauli-closure: every element maps Paulis to signed Paulis
 # ---------------------------------------------------------------------------
 
+
 def test_every_clifford_maps_x_to_signed_pauli():
     for gates in SINGLE_QUBIT_CLIFFORDS:
         img_X, _ = _pauli_action(gates)
         phase, x, z = img_X
-        assert (x, z) in _VALID_PAULIS, (
-            f"{gates} maps X to invalid (x={x}, z={z})"
-        )
+        assert (x, z) in _VALID_PAULIS, f"{gates} maps X to invalid (x={x}, z={z})"
         assert phase in (0, 1), f"{gates} has invalid phase {phase} for X-image"
 
 
@@ -75,9 +75,7 @@ def test_every_clifford_maps_z_to_signed_pauli():
     for gates in SINGLE_QUBIT_CLIFFORDS:
         _, img_Z = _pauli_action(gates)
         phase, x, z = img_Z
-        assert (x, z) in _VALID_PAULIS, (
-            f"{gates} maps Z to invalid (x={x}, z={z})"
-        )
+        assert (x, z) in _VALID_PAULIS, f"{gates} maps Z to invalid (x={x}, z={z})"
         assert phase in (0, 1), f"{gates} has invalid phase {phase} for Z-image"
 
 
@@ -87,14 +85,16 @@ def test_x_and_z_images_are_orthogonal():
         img_X, img_Z = _pauli_action(gates)
         _, xX, zX = img_X
         _, xZ, zZ = img_Z
-        assert (xX, zX) != (xZ, zZ), (
-            f"{gates}: X and Z both map to the same Pauli type ({xX},{zX})"
-        )
+        assert (xX, zX) != (
+            xZ,
+            zZ,
+        ), f"{gates}: X and Z both map to the same Pauli type ({xX},{zX})"
 
 
 # ---------------------------------------------------------------------------
 # Coverage: all 24 Pauli-action slots are filled
 # ---------------------------------------------------------------------------
+
 
 def test_all_24_signed_pauli_pairs_covered():
     """The 24 actions must together cover all elements of the Clifford group.
@@ -120,13 +120,16 @@ def test_all_24_signed_pauli_pairs_covered():
     # 2 sign choices each, 2 choices for img_Z type different from img_X,
     # 2 sign choices each).  But not all are reachable — exactly 24 are
     # (the group has order 24).  We just check our sigs == the reachable ones.
-    assert sigs == (sigs & valid_slots), "Some action has an invalid (img_X, img_Z) pair"
+    assert sigs == (
+        sigs & valid_slots
+    ), "Some action has an invalid (img_X, img_Z) pair"
     assert len(sigs) == 24
 
 
 # ---------------------------------------------------------------------------
 # Known gate actions (ground-truth checks)
 # ---------------------------------------------------------------------------
+
 
 def test_identity_action():
     """Empty gate sequence is the identity: X->+X, Z->+Z."""
@@ -137,38 +140,39 @@ def test_identity_action():
 
 def test_H_action():
     """H conjugates: X -> +Z, Z -> +X."""
-    img_X, img_Z = _pauli_action(('H',))
+    img_X, img_Z = _pauli_action(("H",))
     assert img_X == (0, 0, 1), f"H: X->{_decode(img_X)}, expected +Z"
     assert img_Z == (0, 1, 0), f"H: Z->{_decode(img_Z)}, expected +X"
 
 
 def test_S_action():
     """S conjugates: X -> +Y, Z -> +Z."""
-    img_X, img_Z = _pauli_action(('S',))
+    img_X, img_Z = _pauli_action(("S",))
     assert img_X == (0, 1, 1), f"S: X->{_decode(img_X)}, expected +Y"
     assert img_Z == (0, 0, 1), f"S: Z->{_decode(img_Z)}, expected +Z"
 
 
 def test_SS_action():
     """S^2 = Z gate conjugates: X -> -X, Z -> +Z."""
-    img_X, img_Z = _pauli_action(('S', 'S'))
+    img_X, img_Z = _pauli_action(("S", "S"))
     assert img_X == (1, 1, 0), f"S^2: X->{_decode(img_X)}, expected -X"
     assert img_Z == (0, 0, 1), f"S^2: Z->{_decode(img_Z)}, expected +Z"
 
 
 def test_SSSS_is_identity():
     """S has order 4: S^4 = I."""
-    assert _pauli_action(('S', 'S', 'S', 'S')) == _pauli_action(())
+    assert _pauli_action(("S", "S", "S", "S")) == _pauli_action(())
 
 
 def test_HH_is_identity():
     """H has order 2: H^2 = I."""
-    assert _pauli_action(('H', 'H')) == _pauli_action(())
+    assert _pauli_action(("H", "H")) == _pauli_action(())
 
 
 # ---------------------------------------------------------------------------
 # apply_single_qubit_clifford applies the right transformation
 # ---------------------------------------------------------------------------
+
 
 def test_apply_clifford_matches_pauli_action():
     """apply_single_qubit_clifford must produce states consistent with _pauli_action."""
@@ -191,6 +195,7 @@ def test_apply_clifford_matches_pauli_action():
 # random_single_qubit_clifford API smoke test
 # ---------------------------------------------------------------------------
 
+
 def test_random_clifford_with_rng():
     rng = np.random.default_rng(0)
     s = StabilizerState(2)
@@ -204,11 +209,12 @@ def test_random_clifford_with_rng():
 def test_random_clifford_without_rng():
     s = StabilizerState(1)
     for _ in range(20):
-        random_single_qubit_clifford(s, 0)   # uses global numpy RNG
+        random_single_qubit_clifford(s, 0)  # uses global numpy RNG
 
 
 def test_random_clifford_reproducible():
     """Same seed -> same sequence of drawn Cliffords."""
+
     def run(seed):
         rng = np.random.default_rng(seed)
         s = StabilizerState(1)

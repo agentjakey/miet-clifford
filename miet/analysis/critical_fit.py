@@ -15,6 +15,7 @@ NOTE on alpha_eff:
   Clifford circuits at L >> 100.  We do NOT convert to c_eff = 6*alpha_eff:
   the MIPT is not a standard CFT (Jian et al. PRB 101, 104302, 2020).
 """
+
 import numpy as np
 from scipy.optimize import minimize
 from scipy.stats import linregress
@@ -26,10 +27,11 @@ from src.simulation import load_results
 
 SWEEP_PATH = os.path.join(os.path.dirname(__file__), "../data/sweep_results.npz")
 QUICK_PATH = os.path.join(os.path.dirname(__file__), "../data/quick_results.npz")
-OUT_TXT    = os.path.join(os.path.dirname(__file__), "../data/critical_quantities.txt")
+OUT_TXT = os.path.join(os.path.dirname(__file__), "../data/critical_quantities.txt")
 
 
 # ── Data loading ──────────────────────────────────────────────────────────────
+
 
 def _load_best():
     def filter_valid(L_vals, p_vals, mean, std, sem):
@@ -52,6 +54,7 @@ def _load_best():
 
 # ── Fig 1: curve crossing ─────────────────────────────────────────────────────
 
+
 def _find_crossing(p, s1, s2):
     """Linear interpolation of crossing between two S(p) curves."""
     diff = s1 - s2
@@ -69,7 +72,7 @@ def _pc_from_crossing(L_vals, p_vals, mean_S, sem_S, n_boot=200):
     Uses the two largest L values to get the best finite-size estimate.
     """
     if len(L_vals) < 2:
-        return float('nan'), float('nan')
+        return float("nan"), float("nan")
 
     # Primary estimate: crossing of the two largest L curves
     crossings = []
@@ -77,7 +80,7 @@ def _pc_from_crossing(L_vals, p_vals, mean_S, sem_S, n_boot=200):
         x = _find_crossing(p_vals, mean_S[i], mean_S[i + 1])
         if x is not None:
             crossings.append(x)
-    pc_est = float(np.mean(crossings)) if crossings else float('nan')
+    pc_est = float(np.mean(crossings)) if crossings else float("nan")
 
     # Bootstrap
     boot_vals = []
@@ -91,11 +94,12 @@ def _pc_from_crossing(L_vals, p_vals, mean_S, sem_S, n_boot=200):
                 xs.append(x)
         if xs:
             boot_vals.append(float(np.mean(xs)))
-    pc_err = float(np.std(boot_vals, ddof=1)) if len(boot_vals) > 1 else float('nan')
+    pc_err = float(np.std(boot_vals, ddof=1)) if len(boot_vals) > 1 else float("nan")
     return pc_est, pc_err
 
 
 # ── Fig 3: FSS collapse ───────────────────────────────────────────────────────
+
 
 def _collapse_cost(params, L_vals, p_vals, mean_S):
     p_c, nu = params
@@ -107,7 +111,7 @@ def _collapse_cost(params, L_vals, p_vals, mean_S):
         order = np.argsort(x)
         curves.append((x[order], mean_S[i][order]))
 
-    x_lo = max(c[0][0]  for c in curves)
+    x_lo = max(c[0][0] for c in curves)
     x_hi = min(c[0][-1] for c in curves)
     if x_lo >= x_hi:
         return 1e9
@@ -120,8 +124,7 @@ def _collapse_cost(params, L_vals, p_vals, mean_S):
             return 1e9
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            f = interp1d(x_c[mask], y_c[mask], kind="linear",
-                         fill_value="extrapolate")
+            f = interp1d(x_c[mask], y_c[mask], kind="linear", fill_value="extrapolate")
         interps.append(f(x_grid))
 
     cost, n_pairs = 0.0, 0
@@ -143,8 +146,12 @@ def _fss_optimize(L_vals, p_vals, mean_S, p_c0=0.16, nu0=1.3):
             return 1e9
         return _collapse_cost(params, L_vals, p_vals, mean_S)
 
-    res = minimize(cost_b, x0=[p_c0, nu0], method="Nelder-Mead",
-                   options={"xatol": 1e-4, "fatol": 1e-6, "maxiter": 4000})
+    res = minimize(
+        cost_b,
+        x0=[p_c0, nu0],
+        method="Nelder-Mead",
+        options={"xatol": 1e-4, "fatol": 1e-6, "maxiter": 4000},
+    )
     return float(res.x[0]), float(res.x[1])
 
 
@@ -153,16 +160,18 @@ def _fss_fit(L_vals, p_vals, mean_S, sem_S, n_boot=100):
     pc_boot, nu_boot = [], []
     for _ in range(n_boot):
         noise = np.random.randn(*mean_S.shape) * sem_S
-        pc_b, nu_b = _fss_optimize(L_vals, p_vals, mean_S + noise,
-                                   p_c0=pc_opt, nu0=nu_opt)
+        pc_b, nu_b = _fss_optimize(
+            L_vals, p_vals, mean_S + noise, p_c0=pc_opt, nu0=nu_opt
+        )
         pc_boot.append(pc_b)
         nu_boot.append(nu_b)
-    pc_err = float(np.std(pc_boot, ddof=1)) if len(pc_boot) > 1 else float('nan')
-    nu_err = float(np.std(nu_boot, ddof=1)) if len(nu_boot) > 1 else float('nan')
+    pc_err = float(np.std(pc_boot, ddof=1)) if len(pc_boot) > 1 else float("nan")
+    nu_err = float(np.std(nu_boot, ddof=1)) if len(nu_boot) > 1 else float("nan")
     return pc_opt, pc_err, nu_opt, nu_err
 
 
 # ── Fig 2: log scaling alpha ──────────────────────────────────────────────────
+
 
 def _alpha_fit(L_vals, p_vals, mean_S, sem_S, n_boot=200):
     """Fit S(L/2) = alpha*ln(L/2) + const at the p closest to 0.16."""
@@ -172,7 +181,7 @@ def _alpha_fit(L_vals, p_vals, mean_S, sem_S, n_boot=200):
     e = sem_S[:, p_idx]
 
     if len(x) < 2:
-        return float('nan'), float('nan'), float(p_vals[p_idx])
+        return float("nan"), float("nan"), float(p_vals[p_idx])
 
     fit = linregress(x, y)
     alpha = float(fit.slope)
@@ -188,20 +197,21 @@ def _alpha_fit(L_vals, p_vals, mean_S, sem_S, n_boot=200):
 
 # ── Volume-law coefficient ────────────────────────────────────────────────────
 
+
 def _alpha_vol_fit(L_vals, p_vals, mean_S, sem_S, n_boot=200):
     """Fit S(L/2) = alpha_vol*(L/2) + const at p=0 using largest L values."""
     p_idx = int(np.argmin(np.abs(p_vals - 0.0)))
 
     # Use up to the 3 largest L values
     n_use = min(3, len(L_vals))
-    idx   = slice(-n_use, None)
+    idx = slice(-n_use, None)
     L_use = L_vals[idx] if not isinstance(L_vals, list) else L_vals[-n_use:]
     x = np.array([L / 2.0 for L in L_use])
-    y = mean_S[idx if not isinstance(idx, slice) else -n_use:, p_idx]
+    y = mean_S[idx if not isinstance(idx, slice) else -n_use :, p_idx]
     e = sem_S[-n_use:, p_idx]
 
     if len(x) < 2:
-        return float('nan'), float('nan')
+        return float("nan"), float("nan")
 
     fit = linregress(x, y)
     alpha_vol = float(fit.slope)
@@ -216,6 +226,7 @@ def _alpha_vol_fit(L_vals, p_vals, mean_S, sem_S, n_boot=200):
 
 # ── Area-law saturation ───────────────────────────────────────────────────────
 
+
 def _area_law(L_vals, p_vals, mean_S, sem_S):
     """Mean and SEM of S at p=0.5 for the largest L."""
     p_idx = int(np.argmin(np.abs(p_vals - 0.5)))
@@ -225,6 +236,7 @@ def _area_law(L_vals, p_vals, mean_S, sem_S):
 
 
 # ── Table formatting ──────────────────────────────────────────────────────────
+
 
 def _fmt(val, err, width=17):
     if np.isfinite(val) and np.isfinite(err):
@@ -237,22 +249,23 @@ def _fmt(val, err, width=17):
 
 
 def _build_table(rows):
-    col_q   = max(len(r[0]) for r in rows) + 2
-    col_tw  = 19
+    col_q = max(len(r[0]) for r in rows) + 2
+    col_tw = 19
     col_lit = max(len(r[2]) for r in rows) + 2
-    sep = (f"+{'-'*(col_q)}+{'-'*(col_tw)}+{'-'*(col_lit)}+")
-    hdr = (f"| {'Quantity':<{col_q-2}} | {'This work':<{col_tw-2}} "
-           f"| {'Literature':<{col_lit-2}} |")
+    sep = f"+{'-'*(col_q)}+{'-'*(col_tw)}+{'-'*(col_lit)}+"
+    hdr = (
+        f"| {'Quantity':<{col_q-2}} | {'This work':<{col_tw-2}} "
+        f"| {'Literature':<{col_lit-2}} |"
+    )
     lines = [sep, hdr, sep]
     for q, val_s, lit in rows:
-        lines.append(
-            f"| {q:<{col_q-2}} | {val_s:<{col_tw-2}} | {lit:<{col_lit-2}} |"
-        )
+        lines.append(f"| {q:<{col_q-2}} | {val_s:<{col_tw-2}} | {lit:<{col_lit-2}} |")
     lines.append(sep)
     return "\n".join(lines)
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
+
 
 def main():
     L_vals, p_vals, mean_S, std_S, sem_S = _load_best()
@@ -263,42 +276,54 @@ def main():
 
     print("  [1/5] p_c from curve crossing ...")
     pc_cross, pc_cross_err = _pc_from_crossing(
-        L_vals, p_vals, mean_S, sem_S, n_boot=n_boot)
+        L_vals, p_vals, mean_S, sem_S, n_boot=n_boot
+    )
 
     print("  [2/5] FSS collapse (p_c, nu) ...")
-    pc_fss, pc_fss_err, nu, nu_err = _fss_fit(
-        L_vals, p_vals, mean_S, sem_S, n_boot=100)
+    pc_fss, pc_fss_err, nu, nu_err = _fss_fit(L_vals, p_vals, mean_S, sem_S, n_boot=100)
 
     print("  [3/5] Log-scaling alpha at p_c ...")
-    alpha, alpha_err, p_used = _alpha_fit(
-        L_vals, p_vals, mean_S, sem_S, n_boot=n_boot)
+    alpha, alpha_err, p_used = _alpha_fit(L_vals, p_vals, mean_S, sem_S, n_boot=n_boot)
 
     print("  [4/5] Volume-law coefficient alpha_vol at p=0 ...")
     alpha_vol, alpha_vol_err = _alpha_vol_fit(
-        L_vals, p_vals, mean_S, sem_S, n_boot=n_boot)
+        L_vals, p_vals, mean_S, sem_S, n_boot=n_boot
+    )
 
     print("  [5/5] Area-law saturation at p=0.5 ...")
     s_inf, s_inf_err = _area_law(L_vals, p_vals, mean_S, sem_S)
 
     rows = [
-        ("p_cross_eff (crossing of S curves, Fig 1)",
-         _fmt(pc_cross, pc_cross_err),
-         "~0.16  (Li+ 2019)"),
-        ("p_fss_eff (FSS collapse, Fig 3)",
-         _fmt(pc_fss, pc_fss_err),
-         "~0.16  (Li+ 2019)"),
-        ("nu_eff (correlation exponent, Fig 3)",
-         _fmt(nu, nu_err),
-         "~1.3   (Zabalo+ 2020)"),
-        (f"alpha_eff (log-scaling at p={p_used:.3f}, Fig 2)",
-         _fmt(alpha, alpha_err),
-         "~1.6   (Li+ 2019)"),
-        ("alpha_vol (volume-law coeff, p=0)",
-         _fmt(alpha_vol, alpha_vol_err),
-         "~1     (system dependent)"),
-        (f"S_inf (area-law saturation, L={L_vals[-1]}, p=0.5)",
-         _fmt(s_inf, s_inf_err),
-         "O(1)   (area law)"),
+        (
+            "p_cross_eff (crossing of S curves, Fig 1)",
+            _fmt(pc_cross, pc_cross_err),
+            "~0.16  (Li+ 2019)",
+        ),
+        (
+            "p_fss_eff (FSS collapse, Fig 3)",
+            _fmt(pc_fss, pc_fss_err),
+            "~0.16  (Li+ 2019)",
+        ),
+        (
+            "nu_eff (correlation exponent, Fig 3)",
+            _fmt(nu, nu_err),
+            "~1.3   (Zabalo+ 2020)",
+        ),
+        (
+            f"alpha_eff (log-scaling at p={p_used:.3f}, Fig 2)",
+            _fmt(alpha, alpha_err),
+            "~1.6   (Li+ 2019)",
+        ),
+        (
+            "alpha_vol (volume-law coeff, p=0)",
+            _fmt(alpha_vol, alpha_vol_err),
+            "~1     (system dependent)",
+        ),
+        (
+            f"S_inf (area-law saturation, L={L_vals[-1]}, p=0.5)",
+            _fmt(s_inf, s_inf_err),
+            "O(1)   (area law)",
+        ),
     ]
 
     table = _build_table(rows)
@@ -309,13 +334,16 @@ def main():
         "(Jian, You, Vasseur, Ludwig, PRB 101, 104302, 2020)\n"
     )
     if n_L < 3:
-        note += (f"\nCAVEAT: only {n_L} system size(s) available. "
-                 "FSS and log-scaling fits are under-constrained.\n"
-                 "Run scripts/run_sweep.py to completion for reliable exponents.\n")
+        note += (
+            f"\nCAVEAT: only {n_L} system size(s) available. "
+            "FSS and log-scaling fits are under-constrained.\n"
+            "Run scripts/run_sweep.py to completion for reliable exponents.\n"
+        )
 
     header = (
         "MIPT Critical Quantities\n"
-        + "=" * 70 + "\n\n"
+        + "=" * 70
+        + "\n\n"
         + "NOTE: All p_c, nu, and alpha quantities reported here are finite-size\n"
         + "effective estimates from L <= 24 unless explicitly labeled as literature\n"
         + "values. Systematic finite-size bias dominates over statistical uncertainty.\n\n"
