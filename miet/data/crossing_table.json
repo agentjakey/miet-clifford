@@ -1,0 +1,37 @@
+{
+  "pairs": [
+    {
+      "L1": 8,
+      "L2": 12,
+      "pcross_eff": 0.25166666666666665,
+      "uncertainty": 0.03820491459152148,
+      "note": "multiple crossings -- non-monotonic difference"
+    },
+    {
+      "L1": 12,
+      "L2": 16,
+      "pcross_eff": 0.21120000000000003,
+      "uncertainty": 0.028977314380933063,
+      "note": "multiple crossings -- non-monotonic difference"
+    },
+    {
+      "L1": 16,
+      "L2": 20,
+      "pcross_eff": 0.156,
+      "uncertainty": 0.03689599177867656,
+      "note": "multiple crossings -- non-monotonic difference"
+    },
+    {
+      "L1": 20,
+      "L2": 24,
+      "pcross_eff": 0.192,
+      "uncertainty": 0.03324179028622005,
+      "note": "multiple crossings -- non-monotonic difference"
+    }
+  ],
+  "mean_pcross_eff": 0.20271666666666666,
+  "largest_pcross_eff": 0.192,
+  "largest_pcross_unc": 0.03324179028622005,
+  "spread": 0.09566666666666665,
+  "note": "Spread reflects systematic finite-size drift; bootstrap uncertainties are statistical only at fixed L"
+}

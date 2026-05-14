@@ -1,0 +1,84 @@
+{
+  "L_values": [
+    8,
+    12,
+    16,
+    20,
+    24
+  ],
+  "n_L": 5,
+  "pc_eff": 0.20916008663177488,
+  "pc_err_boot": 0.00962604724293929,
+  "nu_eff": 1.7222002297639853,
+  "nu_err_boot": 0.14365741813858468,
+  "note_pc": "finite-size effective; bootstrap statistical error only",
+  "note_nu": "finite-size effective; bootstrap statistical error only",
+  "ansatz": "S(L,p) = f((p-pc)*L^(1/nu)); omits critical log term",
+  "collapse_type": "diagnostic; not a precision measurement",
+  "lit_pc": 0.16,
+  "lit_nu": 1.28,
+  "sensitivity_variants": [
+    {
+      "label": "All L",
+      "L_used": [
+        8,
+        12,
+        16,
+        20,
+        24
+      ],
+      "p_window": "full",
+      "pc_eff": 0.20916003676412426,
+      "nu_eff": 1.72220158475894
+    },
+    {
+      "label": "L >= 12",
+      "L_used": [
+        12,
+        16,
+        20,
+        24
+      ],
+      "p_window": "full",
+      "pc_eff": 0.1965115060140386,
+      "nu_eff": 1.926292182561766
+    },
+    {
+      "label": "L >= 16",
+      "L_used": [
+        16,
+        20,
+        24
+      ],
+      "p_window": "full",
+      "pc_eff": 0.25198116943593063,
+      "nu_eff": 2.999985663660784
+    },
+    {
+      "label": "All L, p in [0.06, 0.35]",
+      "L_used": [
+        8,
+        12,
+        16,
+        20,
+        24
+      ],
+      "p_window": "[0.06, 0.35]",
+      "pc_eff": 0.2588722193129014,
+      "nu_eff": 2.414417203268549
+    },
+    {
+      "label": "All L, p in [0.10, 0.25]",
+      "L_used": [
+        8,
+        12,
+        16,
+        20,
+        24
+      ],
+      "p_window": "[0.1, 0.25]",
+      "pc_eff": 0.21466603887755548,
+      "nu_eff": 1.4830456696446956
+    }
+  ]
+}

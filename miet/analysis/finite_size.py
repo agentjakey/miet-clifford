@@ -330,8 +330,13 @@ def main():
             for r in sens_rows
         ],
     }
+    def _json_default(obj):
+        if hasattr(obj, 'item'):
+            return obj.item()
+        raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
+
     with open(OUT_CFG, 'w') as f:
-        json.dump(cfg, f, indent=2)
+        json.dump(cfg, f, indent=2, default=_json_default)
     print(f"Saved fit config:        {OUT_CFG}")
 
     # ------------------------------------------------------------------ #

@@ -1,0 +1,19 @@
+========================================================================
+Adjacent-Size Crossing Analysis  (pcross_eff, not thermodynamic p_c)
+Bootstrap uncertainty = statistical precision at fixed L only.
+Spread across pairs = systematic finite-size drift (NOT stat. error).
+========================================================================
+   L1     L2    pcross_eff    boot_unc  Note
+------------------------------------------------------------------------
+    8     12        0.2517      0.0382  multiple crossings -- non-monotonic difference
+   12     16        0.2112      0.0290  multiple crossings -- non-monotonic difference
+   16     20        0.1560      0.0369  multiple crossings -- non-monotonic difference
+   20     24        0.1920      0.0332  multiple crossings -- non-monotonic difference
+------------------------------------------------------------------------
+  Mean crossing    (all pairs):   pcross_eff = 0.2027
+  Largest-L crossing (20 x 24):  pcross_eff = 0.1920 +/- 0.0332
+  Spread (max - min):             0.0957
+  NOTE: spread > boot_unc signals systematic finite-size drift
+========================================================================
+
+mean crossing = 0.202717

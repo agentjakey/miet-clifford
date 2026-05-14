@@ -222,8 +222,15 @@ def main():
         'note': ('Spread reflects systematic finite-size drift; '
                  'bootstrap uncertainties are statistical only at fixed L'),
     }
+    def _json_default(obj):
+        if isinstance(obj, (int, float)):
+            return obj
+        if hasattr(obj, 'item'):
+            return obj.item()
+        raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
+
     with open(OUT_CROSS_JSON, 'w') as f:
-        json.dump(cross_json, f, indent=2)
+        json.dump(cross_json, f, indent=2, default=_json_default)
     print(f"Saved crossing JSON:  {OUT_CROSS_JSON}")
 
     # ------------------------------------------------------------------ #

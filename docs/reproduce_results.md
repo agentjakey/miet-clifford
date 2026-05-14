@@ -149,9 +149,11 @@ After a complete run, the following files should exist under `miet/`:
 ```
 data/
   sweep_results.npz              # main simulation data (L, p, mean_S, std_S, sem_S)
-  sweep_results_metadata.json    # provenance: L values, p values, seed, git hash, etc.
+  sweep_results_metadata.json    # generated alongside sweep_results.npz during run_sweep.py;
+                                 # not committed (records datetime, git hash, seed at run time)
   quick_results.npz              # small sanity-check sweep
-  quick_results_metadata.json
+  quick_results_metadata.json    # generated alongside quick_results.npz during run_quick.py;
+                                 # not committed (same provenance fields as above)
   physics_audit.txt              # 7 correctness checks
   crossing_table.txt             # adjacent-size pcross_eff per pair + summary
   crossing_table.json            # same data in machine-readable form
