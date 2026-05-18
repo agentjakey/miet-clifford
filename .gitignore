@@ -1,3 +1,14 @@
+# LaTeX build artifacts (aux files; keep main.pdf and main.tex)
+*.aux
+*.bbl
+*.blg
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
