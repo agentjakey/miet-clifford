@@ -22,20 +22,25 @@ the qualitative phenomenology of the MIPT at system sizes $L \leq 24$.
 - **Aaronson-Gottesman stabilizer tableau** — full $(2n) \times (2n+1)$ binary
   matrix over GF(2), implementing H, S, CNOT, and projective measurement with
   exact rowsum phase tracking. No Stim, no Qiskit.
+
 - **Entanglement entropy via GF(2) rank** — XOR Gaussian elimination on the
   stabilizer submatrix restricted to one half of the chain. No floating-point
   linear algebra.
+
 - **Brickwork hybrid circuit** — alternating layers of random two-qubit Cliffords
   and single-site measurements at rate $p$. Single-qubit gates are sampled
   uniformly from the verified 24-element group (programmatically enumerated by
   Pauli action); the two-qubit ensemble is not verified uniform over all 11,520
   elements. Configurable warmup thermalization.
+
 - **Disorder-averaged parameter sweep** — deterministic seeding via
   `numpy.SeedSequence`, checkpoint saving, and companion metadata JSON for
   full reproducibility.
+
 - **Analysis pipeline** — adjacent-size crossing analysis with bootstrap
   uncertainty, FSS collapse with sensitivity analysis, multi-$p$ log-scaling
   table, and all four report figures.
+
 - **LaTeX report** — 7-page write-up in RevTeX4-2 / PRL format with full
   theoretical background, appendices, and citations.
 
@@ -45,7 +50,7 @@ The simulation reproduces the qualitative crossover from volume-law to area-law
 entanglement and all expected finite-size signatures of the MIPT.
 
 | Quantity | This project ($L \leq 24$) | Literature (thermodynamic) |
-|---|---|---|
+| --- | --- | --- |
 | $p_c^{\mathrm{eff}}$ (curve crossing) | $0.203 \pm 0.017$ | $\approx 0.16$ (Li et al. 2019) |
 | $p_c^{\mathrm{eff}}$ (FSS collapse) | $0.209 \pm 0.008$ | $\approx 0.16$ (Li et al. 2019) |
 | $\nu_{\mathrm{eff}}$ | $1.72 \pm 0.10$ | $\approx 1.28$ (Zabalo et al. 2020) |
@@ -88,7 +93,9 @@ correctness (verified 24 unique single-qubit actions). All 53 pass.
 
 ## Reproducing results
 
-All simulation commands run from `miet/`. See [`docs/reproduce_results.md`](docs/reproduce_results.md) for the complete walkthrough. Quick version:
+All simulation commands run from `miet/`. See
+[`docs/reproduce_results.md`](docs/reproduce_results.md) for the complete
+walkthrough. Quick version:
 
 ```bash
 cd miet/
