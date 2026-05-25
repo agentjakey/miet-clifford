@@ -501,3 +501,101 @@ def test_measurement_repeatability_after_random_clifford():
         assert (
             o1 == o2
         ), f"Trial {trial}: measuring qubit {q_meas} twice gave {o1} then {o2}"
+
+
+# ---------------------------------------------------------------------------
+# Entropy is always a non-negative integer for stabilizer states
+# ---------------------------------------------------------------------------
+
+
+def test_entropy_is_nonneg_integer_after_random_circuit():
+    """Stabilizer entanglement entropy must be a non-negative integer in {0,...,|A|}.
+
+    Any real-valued (non-integer) result indicates a bug in the GF(2) rank
+    computation (e.g., floating-point rank instead of binary rank).
+    """
+    from miet_clifford.circuit import run_circuit
+
+    rng = np.random.default_rng(13)
+    n = 8
+    for trial in range(20):
+        s = run_circuit(n, p_meas=0.1, n_steps=30, rng=rng)
+        for size in [1, 2, n // 2, n - 1]:
+            A = list(range(size))
+            e = entanglement_entropy(s, A)
+            assert e == int(e), (
+                f"Trial {trial}: entropy for |A|={size} is {e} (not integer). "
+                "GF(2) rank computation may be using floating-point arithmetic."
+            )
+            assert 0 <= e <= min(size, n - size), (
+                f"Trial {trial}: entropy {e} out of range [0, {min(size, n-size)}] "
+                f"for |A|={size}, n={n}."
+            )
+
+
+# ---------------------------------------------------------------------------
+# GF(2) rank vs real rank: constructed counter-example
+# ---------------------------------------------------------------------------
+
+
+def test_gf2_rank_differs_from_real_rank():
+    """Show that numpy real-valued rank gives WRONG answer for a GF(2) matrix.
+
+    The matrix [[1,1],[1,1]] has real rank 1 (rows are proportional) AND
+    GF(2) rank 1 (rows sum to [0,0] mod 2, so they are linearly dependent mod 2).
+
+    A matrix where real rank != GF(2) rank:
+        [[1,1,0],[0,1,1],[1,0,1]]
+    Over the reals: rank 3 (all rows independent over R).
+    Over GF(2): rows sum to [0,0,0] mod 2 -> rank 2.
+
+    This test documents why gf2_rank (XOR elimination) is required and
+    numpy.linalg.matrix_rank cannot be substituted.
+    """
+    M = np.array([[1, 1, 0], [0, 1, 1], [1, 0, 1]], dtype=np.int8)
+    gf2 = gf2_rank(M)
+    real = int(np.linalg.matrix_rank(M.astype(float)))
+    assert gf2 == 2, f"GF(2) rank should be 2, got {gf2}"
+    assert real == 3, f"Real rank should be 3, got {real}"
+    assert gf2 != real, "GF(2) rank and real rank must differ on this matrix"
+
+
+# ---------------------------------------------------------------------------
+# Entanglement profile: S(A) shape in volume-law and area-law circuits
+# ---------------------------------------------------------------------------
+
+
+def test_entropy_profile_volume_law():
+    """At p=0, S(A) grows with |A|: S(L/2) > S(L/4) > S(1)."""
+    from miet_clifford.circuit import run_circuit
+
+    rng = np.random.default_rng(2025)
+    n = 16
+    s = run_circuit(n, p_meas=0.0, n_steps=40, rng=rng)
+    e1 = entanglement_entropy(s, [0])
+    e4 = entanglement_entropy(s, list(range(n // 4)))
+    e8 = entanglement_entropy(s, list(range(n // 2)))
+    assert e8 > e4, f"Volume law: S(L/2)={e8} should exceed S(L/4)={e4}"
+    assert e4 > e1, f"Volume law: S(L/4)={e4} should exceed S(1)={e1}"
+
+
+def test_entropy_profile_area_law():
+    """At p=0.5, S(A) is small and nearly flat across subsystem sizes."""
+    from miet_clifford.circuit import run_circuit
+
+    rng = np.random.default_rng(777)
+    n = 16
+    vals = []
+    for _ in range(10):
+        s = run_circuit(n, p_meas=0.5, n_steps=50, rng=rng)
+        e_small = entanglement_entropy(s, list(range(2)))
+        e_half = entanglement_entropy(s, list(range(n // 2)))
+        vals.append((e_small, e_half))
+
+    mean_small = np.mean([v[0] for v in vals])
+    mean_half = np.mean([v[1] for v in vals])
+    assert mean_half < 3.0, f"Area law: mean S(L/2)={mean_half:.2f} too large at p=0.5"
+    assert mean_half - mean_small < 3.0, (
+        f"Area law: S(L/2)-S(2)={mean_half-mean_small:.2f} too large;"
+        " entropy should be approximately flat"
+    )

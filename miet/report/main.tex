@@ -31,15 +31,18 @@ crossover from volume-law entanglement at low measurement rate to area-law
 entanglement at high measurement rate.
 Adjacent-size crossings and finite-size scaling fits give effective critical
 rates $p_c^{\mathrm{eff}} \approx 0.20$, above the thermodynamic literature
-value $p_c \approx 0.16$~\cite{Li2019}, consistent with strong finite-size
-and model-dependent effects at these small sizes.
+value $p_c \approx 0.16$~\cite{Li2019}, consistent with well-documented
+finite-size corrections at these small sizes.
 A log-scaling fit near the literature critical point gives a finite-size
 coefficient $\alpha_{\mathrm{eff}} \approx 0.27$, which shows the expected
 logarithmic form but does not quantitatively reproduce the asymptotic
 literature value~\cite{Li2019}.
-Overall, the project reproduces the qualitative phenomenology of the MIPT
-while highlighting the limitations of extracting universal exponents from
-$L \leq 24$ data.
+We additionally measure the full entanglement profile $S(A)$ as a function of
+subsystem size $|A|$ for representative values of $p$, directly resolving
+the linear volume-law growth, the approximately flat area-law behavior, and
+the intermediate sublinear growth near the critical region.
+The project reproduces the qualitative phenomenology of the MIPT and
+highlights the limitations of extracting universal exponents from $L \leq 24$ data.
 \end{abstract}
 
 \maketitle
@@ -96,15 +99,18 @@ signature of the phase transition.
 
 In this paper we implement the full Aaronson-Gottesman tableau from scratch
 and use it to (i) map out the phase diagram $S(L/2)$ vs.\ $p$ for
-$L \in \{8,12,16,20,24\}$; (ii) measure a log-scaling coefficient at $p=0.16$;
-(iii) perform a qualitative finite-size scaling collapse; and (iv) discuss
+$L \in \{8,12,16,20,24\}$; (ii) measure the full entanglement profile
+$S(A)$ vs.\ subsystem size $|A|$ for three representative values of $p$,
+directly resolving the linear and flat profiles of the two phases;
+(iii) measure a log-scaling coefficient at $p=0.16$;
+(iv) perform a qualitative finite-size scaling collapse; and (v) discuss
 connections to quantum error correction and threshold phenomena in machine
 learning.
 The paper is organized as follows: Sec.~\ref{sec:background} reviews the
 theoretical framework; Sec.~\ref{sec:methods} describes the circuit model and
-simulation protocol; Sec.~\ref{sec:results} presents numerical results;
-Sec.~\ref{sec:discussion} discusses physical implications; and
-Sec.~\ref{sec:conclusion} concludes.
+simulation protocol; Sec.~\ref{sec:results} presents numerical results
+including the entanglement profile; Sec.~\ref{sec:discussion} discusses
+physical implications; and Sec.~\ref{sec:conclusion} concludes.
 
 %% ────────────────────────────────────────────────────────────
 \section{Background}
@@ -316,6 +322,24 @@ implemented from scratch without Stim or Qiskit.
   \label{fig:collapse}
 \end{figure}
 
+\begin{figure}[t!]
+  \includegraphics[width=\columnwidth]{fig4_entanglement_profile}
+  \caption{Entanglement profile $S(A)$ vs.\ subsystem size $|A|$ for $L = 20$
+  (100 disorder realizations; shaded bands: $\pm 1$ SEM).
+  The contiguous subsystem $A = \{0,\ldots,|A|-1\}$.
+  Three representative rates are shown: $p = 0.04$ (volume-law phase),
+  $p = 0.16$ (near the thermodynamic $p_c$), and $p = 0.32$ (area-law phase).
+  The dashed black line $S = |A|$ marks the pure volume-law reference.
+  In the volume-law phase the profile grows roughly linearly with $|A|$;
+  in the area-law phase it is approximately flat; near $p_c$ the growth
+  is sublinear.
+  The orange dashed curve shows a log fit
+  $S = \alpha_{\mathrm{eff}}\ln|A| + c$ to the $p = 0.16$ data
+  ($\alpha_{\mathrm{eff}} \approx 0.35$; the small value is expected at
+  $L = 20$ as discussed in Sec.~\ref{sec:logscaling}).}
+  \label{fig:profile}
+\end{figure}
+
 \subsection{Phase Transition}
 
 Figure~\ref{fig:phase} shows $\overline{S(L/2)}$ as a function of $p$ for all
@@ -341,6 +365,7 @@ This upward bias is a known feature of MIPT finite-size studies at
 $L \lesssim 50$~\cite{Zabalo2020}.
 
 \subsection{Logarithmic Scaling at the Critical Point}
+\label{sec:logscaling}
 
 Figure~\ref{fig:logscale} (right panel) shows $S(L/2)$ vs.\ $\ln(L/2)$ at
 $p = 0.16$, the grid point closest to the literature $p_c$.
@@ -390,6 +415,33 @@ far beyond what is accessible here.
 At these system sizes, the five-curve collapse qualitatively captures the
 correct scaling structure, demonstrating that the simulation reproduces the
 qualitative phenomenology of the MIPT universality class.
+
+\subsection{Entanglement Profile vs.\ Subsystem Size}
+\label{sec:profile}
+
+Figure~\ref{fig:profile} shows the disorder-averaged entanglement entropy
+$S(A)$ as a function of subsystem size $|A| = 1, 2, \ldots, L/2$ for $L = 20$
+at three representative measurement rates.
+In the volume-law phase ($p = 0.04 \ll p_c$), the profile grows roughly linearly
+with $|A|$: the best-fit slope is $\approx 0.55$ ebits per qubit, consistent with
+$S(A) \propto |A|$ and confirming volume-law scaling beyond the half-chain entropy
+alone.
+In the area-law phase ($p = 0.32 \gg p_c$), the profile is approximately flat
+across subsystem sizes, with $S(A) \approx 0.13$--$0.37$ ebits over the full
+range $|A| = 1$--$10$: the entropy does not grow appreciably with the subsystem
+size, as expected for a product-state-like phase.
+At $p = 0.16$ (near the thermodynamic $p_c$), the profile is intermediate:
+sublinear growth, approximately consistent with $S(A) \sim \alpha\ln|A| + c$
+with $\alpha_{\mathrm{eff}} \approx 0.35$, reinforcing the near-critical
+interpretation from Sec.~\ref{sec:logscaling}.
+
+This profile analysis directly resolves the two phases at the level of
+individual subsystem sizes, strengthening the half-chain entropy evidence of
+Fig.~\ref{fig:phase}: the volume-law and area-law behaviors are not an artifact
+of the specific bipartition $|A| = L/2$, but persist across all subsystem sizes.
+We note that at these system sizes ($L = 20$) the profile has not entered the
+asymptotic critical regime, and the slope in the volume-law phase reflects the
+finite-size steady-state rather than the true thermodynamic limit.
 
 \begin{table}
   \caption{Finite-size effective critical quantities from simulation vs.\ literature.
@@ -441,6 +493,16 @@ for the design of robust quantum error-correcting codes.
 
 At $p = p_c$, entanglement scales as $S(L/2) = \alpha(p_c)\ln(L/2) + \mathrm{const}$
 with $\alpha \approx 1.6$~\cite{Li2019} (established at $L \gg 100$).
+Appendix~\ref{app:alpha} (Fig.~\ref{fig:alpha_vs_p}) shows $\alpha_{\mathrm{eff}}(p)$
+computed by fitting $S(L/2) = \alpha_{\mathrm{eff}}\ln(L/2) + c$ at each grid
+point $p$ using all five system sizes.
+The coefficient $\alpha_{\mathrm{eff}}$ peaks near the finite-size effective
+crossing $p_c^{\mathrm{eff}} \approx 0.20$ and drops rapidly on both sides,
+consistent with the expectation that the log-scaling regime is only entered
+at or above $p_c$.
+The small values ($\alpha_{\mathrm{eff}} \lesssim 0.5$) throughout confirm that
+these system sizes have not entered the asymptotic critical regime.
+
 A standard unitary $(1+1)$D CFT with central charge $c$ would predict
 $\alpha = c/6$ for a system with open boundaries
 (Calabrese and Cardy~\cite{CalabreseCardy2004}), which would give
@@ -581,35 +643,42 @@ We implemented the Aaronson-Gottesman stabilizer tableau from scratch and used i
 to study measurement-induced phase transitions in one-dimensional random Clifford
 circuits.
 Simulating $L \in \{8, 12, 16, 20, 24\}$ with 200 disorder realizations per point,
-we reproduced the qualitative MIPT phenomenology: a crossover from volume-law
-($S \propto L$) to area-law ($S = O(1)$) entanglement as the measurement rate
-increases past a finite-size effective critical rate
+we reproduced the qualitative MIPT phenomenology:
+a crossover from volume-law ($S \propto L$) to area-law ($S = O(1)$) entanglement
+as the measurement rate increases past a finite-size effective critical rate
 $p_c^{\mathrm{eff}} \approx 0.20$.
+We additionally computed the full entanglement profile $S(A)$ vs.\ $|A|$ for
+$L = 20$ at three representative rates, directly confirming the linear
+volume-law growth ($S \approx 0.55|A|$ at $p = 0.04$) and the flat area-law
+plateau ($S \lesssim 0.4$ ebits across all subsystem sizes at $p = 0.32$).
 All system sizes studied are too small for reliable thermodynamic exponent
-extraction.
-The extracted finite-size effective parameters
+extraction: the extracted finite-size effective parameters
 ($p_c^{\mathrm{eff}} \approx 0.20$, $\nu_{\mathrm{eff}} \approx 1.72$,
 $\alpha_{\mathrm{eff}} \approx 0.27$) are substantially affected by finite-size
 corrections and are not quantitatively consistent with thermodynamic literature
 values~\cite{Li2019,Zabalo2020}; the quoted bootstrap uncertainties are
-statistical only.
+statistical only and do not reduce the dominant systematic finite-size bias.
 The volume-law coefficient $\alpha_{\mathrm{vol}} = 0.995 \pm 0.017$ and the
 area-law saturation $S_\infty = 0.105 \pm 0.022$ ebits are physically
-interpretable and independently verified by the physics audit (7/7 checks passed).
+interpretable and independently verified; the simulator passes 57 automated
+tests including exact Bell-state and GHZ entropy checks, gate conjugation
+identities, stabilizer commutation invariants, measurement repeatability,
+and a demonstration that GF(2) rank diverges from real-valued rank on a
+constructed counter-example.
 
 We discussed the formal analogy between $p_c$ and the quantum error correction
 threshold, the replica-field-theory interpretation of the log-scaling exponent
-$\alpha$ (which is \textit{not} a CFT central charge), and speculative structural
-analogies with grokking and representation robustness in machine learning.
+$\alpha$ (which is \textit{not} a CFT central charge~\cite{Jian2020}), and
+speculative structural analogies with threshold phenomena in machine learning.
 
-Future directions include verifying whether the two-qubit gate decomposition
-is an exact uniform sampler over the 11,520-element two-qubit Clifford group
+Future directions that would make this a precision numerical study include
+verifying whether the two-qubit gate decomposition uniformly samples the
+full 11,520-element two-qubit Clifford group
 (single-qubit uniformity is now verified; two-qubit uniformity is not),
-extending to two-qubit measurements and non-Clifford gates (requiring tensor
-network methods), implementing OTOC diagnostics to directly measure scrambling,
-studying the transition in open systems with non-Markovian noise, and making
-the analogy with ML threshold phenomena more precise via representation rank
-diagnostics applied to large language models.
+extending to larger system sizes ($L \sim 100$--$500$) where the asymptotic
+log-scaling and FSS regimes are accessible, implementing OTOC diagnostics
+to directly measure scrambling, and studying the entanglement profile at
+criticality to more precisely extract $\alpha(p_c)$ as a function of $|A|$.
 
 %% ────────────────────────────────────────────────────────────
 \begin{acknowledgments}
@@ -623,6 +692,31 @@ stabilizer tableau and circuit infrastructure.
 %% ────────────────────────────────────────────────────────────
 \appendix
 %% ────────────────────────────────────────────────────────────
+
+\section{Log-Scaling Coefficient vs.\ Measurement Rate}
+\label{app:alpha}
+
+Figure~\ref{fig:alpha_vs_p} shows $\alpha_{\mathrm{eff}}(p)$ computed by fitting
+$S(L/2) = \alpha_{\mathrm{eff}}\ln(L/2) + c$ at each grid point $p$ using all
+five system sizes.
+This supplemental figure illustrates the sensitivity of the log-scaling
+coefficient to the evaluation point discussed in Sec.~\ref{sec:logscaling}.
+
+\begin{figure}[t!]
+  \includegraphics[width=\columnwidth]{fig2b_alpha_vs_p}
+  \caption{Small-system log-scaling coefficient $\alpha_{\mathrm{eff}}(p)$
+  obtained by fitting $S(L/2) = \alpha_{\mathrm{eff}}\ln(L/2) + c$ to the
+  five system sizes $L \in \{8,12,16,20,24\}$ at each measurement rate $p$.
+  Error bars are OLS standard errors.
+  The orange dashed line marks the thermodynamic value
+  $\alpha \approx 1.6$~\cite{Li2019} (established at $L \gg 100$); the grey
+  dotted line marks $p_c^{\mathrm{lit}} = 0.16$.
+  The coefficient peaks near the finite-size effective crossing
+  $p_c^{\mathrm{eff}} \approx 0.20$ and is everywhere well below 1.6,
+  confirming that the asymptotic critical log-scaling regime is not reached
+  at $L \leq 24$.}
+  \label{fig:alpha_vs_p}
+\end{figure}
 
 \section{Stabilizer Tableau Gate Update Rules}
 \label{app:gates}
@@ -721,6 +815,7 @@ XOR ($\oplus$) implements addition in GF(2) without modular reduction overhead.
 The algorithm runs in $O(n \cdot |B|^2)$ time, which is negligible compared to the
 $O(n^2)$ cost of a single measurement operation.
 
+\clearpage
 \bibliography{references}
 \bibliographystyle{apsrev4-2}
 

@@ -39,10 +39,12 @@ the qualitative phenomenology of the MIPT at system sizes $L \leq 24$.
 
 - **Analysis pipeline** — adjacent-size crossing analysis with bootstrap
   uncertainty, FSS collapse with sensitivity analysis, multi-$p$ log-scaling
-  table, and all four report figures.
+  table, entanglement profile $S(A)$ vs $|A|$, and all six report figures.
 
-- **LaTeX report** — 7-page write-up in RevTeX4-2 / PRL format with full
-  theoretical background, appendices, and citations.
+- **LaTeX report** — 9-page write-up in RevTeX4-2 / PRL format with full
+  theoretical background, appendices, and citations. AI assistance
+  (Claude Code, Anthropic) was used for implementation and drafting;
+  scientific judgment, testing, and interpretation were reviewed by the author.
 
 ## Main result
 
@@ -86,10 +88,12 @@ pip install -e ".[dev]"
 python -m pytest -v
 ```
 
-53 tests cover tableau initialization, gate conjugation (H, S, CNOT), Bell and
-GHZ entanglement entropy, measurement collapse, symplectic pairing invariants,
-GF(2) rank, circuit-level volume-law / area-law behavior, and Clifford sampler
-correctness (verified 24 unique single-qubit actions). All 53 pass.
+57 tests cover: tableau initialization; gate conjugation (H, S, CNOT); Bell
+and GHZ entanglement entropy; measurement collapse; symplectic pairing
+invariants; GF(2) rank (including a counter-example showing GF(2) rank
+diverges from real-valued rank); circuit-level volume-law / area-law
+behavior; entanglement profile shape in both phases; and Clifford sampler
+correctness (verified 24 unique single-qubit actions). All 57 pass.
 
 ## Reproducing results
 
@@ -99,12 +103,22 @@ walkthrough. Quick version:
 
 ```bash
 cd miet/
-python scripts/physics_audit.py        # 7 correctness checks
-python scripts/run_sweep.py --seed 42  # ~2-3 hours, saves data/sweep_results.npz
-python analysis/phase_diagram.py       # fig1 + crossing table
-python analysis/finite_size.py         # fig3 + fss_config.json
-python analysis/log_scaling.py         # fig2 + alpha table
+python scripts/physics_audit.py           # 7 correctness checks
+python scripts/run_sweep.py --seed 42     # ~2-3 hours, saves data/sweep_results.npz
+python analysis/phase_diagram.py          # fig1 + crossing table
+python analysis/finite_size.py            # fig3 + FSS config
+python analysis/log_scaling.py            # fig2 + fig2b + alpha table
+python analysis/entanglement_profile.py   # fig4: S(A) vs |A| (~5 minutes, L=20)
 ```
+
+The entanglement profile script (`analysis/entanglement_profile.py`) runs
+independently from the main sweep. It simulates 100 disorder realizations
+at L=20 for three measurement rates (p=0.04, 0.16, 0.32) and takes
+approximately 2-5 minutes on a single CPU core.
+
+Expected results: fig4 should show roughly linear S(A) growth at p=0.04
+(slope ~0.5 ebits/qubit), flat behavior at p=0.32 (S ~0.1-0.4 ebits
+across all subsystem sizes), and intermediate sublinear growth at p=0.16.
 
 The compiled report is at [`miet_research_report.pdf`](miet_research_report.pdf).
 
@@ -120,16 +134,18 @@ miet-clifford/
       circuit.py          # brickwork hybrid circuit
       simulation.py       # disorder averaging, sweep, checkpointing
     analysis/
-      phase_diagram.py    # fig1 + crossing analysis
-      log_scaling.py      # fig2 + alpha-vs-p table
-      finite_size.py      # fig3 + sensitivity analysis
-      critical_fit.py     # tabular summary
+      phase_diagram.py         # fig1 + crossing analysis
+      log_scaling.py           # fig2 + fig2b + alpha-vs-p table
+      finite_size.py           # fig3 + sensitivity analysis
+      entanglement_profile.py  # fig4: S(A) vs |A| profile
+      critical_fit.py          # tabular summary
     scripts/
       run_quick.py        # L in {8,12}, fast sanity check
       run_sweep.py        # L in {8..24}, full sweep
       physics_audit.py    # 7 correctness checks
     tests/
-      test_stabilizer.py       # 30 tableau + circuit tests
+      test_stabilizer.py       # 34 tableau + circuit + profile tests
+      test_circuit.py          # 16 Clifford sampler tests
       test_reproducibility.py  # 7 seed/metadata tests
     data/                 # .npz results, crossing table, FSS config
     figures/              # generated PDF and PNG figures
