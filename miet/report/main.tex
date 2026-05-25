@@ -223,8 +223,7 @@ The single-qubit Clifford list is generated programmatically by enumerating
 all $H/S$ sequences of length $\leq 6$, computing the Pauli-conjugation
 action of each via the stabilizer tableau, and deduplicating by action;
 an import-time assertion confirms exactly 24 distinct actions.
-This is the standard random entangling Clifford gate ensemble used in the
-MIPT literature~\cite{Li2019} and is expected to produce scrambling
+This is a random entangling Clifford ensemble of the same general type used in stabilizer MIPT studies~\cite{Li2019} and is expected to produce scrambling
 Clifford dynamics in the MIPT universality class.
 The two-qubit gate ensemble is not verified as a uniform sampler over the
 full 11,520-element two-qubit Clifford group.
@@ -328,7 +327,7 @@ implemented from scratch without Stim or Qiskit.
   (100 disorder realizations; error bars: $\pm 1$ SEM).
   The contiguous subsystem $A = \{0,\ldots,|A|-1\}$.
   Three representative rates are shown: $p = 0.04$ (volume-law phase),
-  $p = 0.16$ (near the thermodynamic $p_c$), and $p = 0.32$ (area-law phase).
+  $p = 0.16$ (close to the thermodynamic literature value, but below the finite-size effective crossing in our data), and $p = 0.32$ (area-law phase).
   The dashed black line $S = |A|$ marks the pure volume-law reference.
   In the volume-law phase the profile grows roughly linearly with $|A|$;
   in the area-law phase it is approximately flat; near $p_c$ the growth
@@ -413,8 +412,7 @@ Reliable extraction of thermodynamic exponents requires system sizes up to
 $L \sim \mathcal{O}(100)$--$\mathcal{O}(500)$~\cite{Zabalo2020},
 far beyond what is accessible here.
 At these system sizes, the five-curve collapse qualitatively captures the
-correct scaling structure, demonstrating that the simulation reproduces the
-qualitative phenomenology of the MIPT universality class.
+correct scaling structure, showing that the simulation qualitatively reproduces finite-size signatures associated with the MIPT.
 
 \subsection{Entanglement Profile vs.\ Subsystem Size}
 \label{sec:profile}
@@ -424,13 +422,13 @@ $S(A)$ as a function of subsystem size $|A| = 1, 2, \ldots, L/2$ for $L = 20$
 at three representative measurement rates.
 In the volume-law phase ($p = 0.04 \ll p_c$), the profile grows roughly linearly
 with $|A|$: the best-fit slope is $\approx 0.55$ ebits per qubit, consistent with
-$S(A) \propto |A|$ and confirming volume-law scaling beyond the half-chain entropy
+$S(A) \propto |A|$ and supporting volume-law scaling beyond the half-chain entropy
 alone.
 In the area-law phase ($p = 0.32 \gg p_c$), the profile is approximately flat
 across subsystem sizes, with $S(A) \approx 0.13$--$0.37$ ebits over the full
 range $|A| = 1$--$10$: the entropy does not grow appreciably with the subsystem
 size, as expected for a product-state-like phase.
-At $p = 0.16$ (near the thermodynamic $p_c$), the profile is intermediate:
+At $p = 0.16$ (close to the thermodynamic literature value, but below the finite-size effective crossing in our data), the profile is intermediate:
 sublinear growth, approximately consistent with $S(A) \sim \alpha\ln|A| + c$
 with $\alpha_{\mathrm{eff}} \approx 0.35$, reinforcing the near-critical
 interpretation from Sec.~\ref{sec:logscaling}.
